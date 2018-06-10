@@ -1,0 +1,19 @@
+.Pile {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: var(--card-height);
+  height: var(--card-height);
+  transform: translate(calc(var(--card-height) * -0.5), calc(var(--card-height) * -0.5))
+  rotate( var(--angle) );
+
+  background: rgba(116, 111, 189, 0.1);
+  border: var(--line-size) dashed rgb(126, 143, 218);
+  border-radius: 100%;
+  font-size: 12px;
+
+  .label {
+    display: block;
+    align-self: center;
+  }
+}

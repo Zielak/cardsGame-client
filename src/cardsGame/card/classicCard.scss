@@ -1,0 +1,65 @@
+.ClassicCard {
+  position: absolute;
+  justify-content: center;
+  display: flex;
+  width: var(--card-width);
+  height: var(--card-height);
+  transform:
+    translate(
+      calc(var(--card-width) * -0.5),
+      calc(var(--card-height) * -0.5)
+    )
+    rotate(var(--angle));
+  transition:
+    0.3s left ease-out,
+    0.3s top ease-out,
+    0.3s transform ease-out,
+    0.1s z-index linear 0.1s;
+
+  .back {
+    width: 100%;
+    background: #b46055;
+    border: var(--line-size) solid white;
+    border-radius: var(--line-size);
+  }
+
+  .front {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    border: var(--line-size) solid rgb(255, 236, 236);
+    border-radius: var(--line-size);
+
+    &.suit-D, &.suit-H {
+      color: red;
+    }
+
+    .icons {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: var(--line-size);
+
+      &.reverse {
+        top: auto;
+        left: auto;
+        bottom: 0;
+        right: 0;
+        transform: rotate(180deg);
+      }
+
+      font-size: 12px;
+
+      .rank {
+      }
+      .suit {
+      }
+    }
+  }
+
+  .debug {
+    position: absolute;
+    top: 0.5em;
+    text-align: center;
+  }
+}
