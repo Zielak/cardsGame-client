@@ -1,7 +1,7 @@
 const METHODS = ['log', 'warn', 'info', 'error']
 const NOOP = () => { }
 
-export let log = () => { }
+export let log = console.log.bind(console)
 
 METHODS.forEach(methodName => log[methodName] = NOOP)
 log.enabled = false
@@ -15,3 +15,5 @@ try {
 } catch (e) {
   // disabled
 }
+
+

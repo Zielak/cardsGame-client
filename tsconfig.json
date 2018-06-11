@@ -1,8 +1,13 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "declaration": true,
+    // "declaration": true,
     "esModuleInterop": true,
+    "lib": [
+      "dom",
+      "es2015",
+      "es2016"
+    ],
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "lib",
@@ -11,13 +16,12 @@
     "removeComments": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es6"
+    "target": "es5"
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
+    "node_modules"
   ]
 }

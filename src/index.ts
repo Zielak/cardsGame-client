@@ -3,7 +3,7 @@ import { Client } from 'colyseus.js'
 // import Lobby from './lobby/index'
 import WarGame from './warGame/index'
 
-require('./styles.scss')
+import './styles.scss'
 
 // === === === === === === == = -
 

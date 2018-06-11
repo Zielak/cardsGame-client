@@ -2,6 +2,7 @@ import { Application, Text } from 'pixi.js'
 import Table from './table/table'
 import EventEmitter from 'eventemitter3'
 import { log } from './utils'
+import * as colyseus from 'colyseus.js'
 
 import {
   cardsListener,
@@ -10,6 +11,17 @@ import {
 } from './listeners/index'
 
 class Game extends EventEmitter {
+
+  propTypes: object
+  app: Application
+  room: colyseus.Room
+  client: colyseus.Client
+  host: string | null
+  table: Table
+
+  static width = 600
+  static height = 600
+
   constructor(room, client) {
     super()
 
@@ -44,13 +56,13 @@ class Game extends EventEmitter {
     const room = this.room
 
     room.onJoin.add(() => {
-      log(this.client.id, 'joined', room.name)
+      log(`${this.client.id} joined ${room.name}`)
       // Testing, just init with players
       room.send({ action: 'GameStart' })
     })
 
     room.onLeave.add(() => {
-      console.info('ON: Leave!')
+      log.info('ON: Leave!')
       room.removeAllListeners()
       room.leave()
 
@@ -60,7 +72,7 @@ class Game extends EventEmitter {
     })
 
     room.onError.add(() => {
-      console.info('ON: Error!')
+      log.info('ON: Error!')
     })
 
     // =======================
@@ -105,7 +117,7 @@ class Game extends EventEmitter {
     containersListener(this.table, room)
     cardsListener(this.table, room)
 
-    room.listen('GameStart', () => {
+    room.listen('GameStart', function () {
       log('GameStart!? ', arguments)
     })
   }
@@ -114,8 +126,5 @@ class Game extends EventEmitter {
     return this.app.stage
   }
 }
-
-Game.width = 600
-Game.height = 600
 
 export default Game

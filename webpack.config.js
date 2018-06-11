@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = env => {
   return {
-    entry: './src/index.js',
+    entry: './src/index.ts',
     output: {
       filename: 'index.js',
       path: path.resolve(__dirname, 'dist')
@@ -23,7 +23,7 @@ module.exports = env => {
         {
           test: /\.(ts)$/,
           exclude: /node_modules/,
-          loaders: ['babel-loader', 'ts-loader'],
+          loaders: ['ts-loader'],
         },
         {
           test: /\.scss$/,
