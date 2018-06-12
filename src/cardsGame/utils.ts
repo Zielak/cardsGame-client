@@ -124,3 +124,6 @@ export const procNumberFromString = (str, min = 0, max = 1) => {
 }
 
 export const appendIdx = (object, idx) => ({ ...object, idx })
+
+export const cm2px = value => value * 15
+export const px2cm = value => value / 15

@@ -1,6 +1,7 @@
 import { Graphics, Text } from 'pixi.js'
 import Component from '../component'
 import PropTypes from 'prop-types'
+import { cm2px } from '../utils'
 
 class ClassicCard extends Component {
 
@@ -80,8 +81,8 @@ class ClassicCard extends Component {
 
 }
 
-ClassicCard.width = 6.35
-ClassicCard.height = 8.89
+ClassicCard.width = cm2px(6.35)
+ClassicCard.height = cm2px(8.89)
 
 ClassicCard.propTypes = {
   id: PropTypes.string,

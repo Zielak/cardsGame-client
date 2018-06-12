@@ -149,7 +149,9 @@ class Table extends Component {
   constructor(props = {}) {
     super(props)
 
-    this.elements = new ElementsMap()
+    this.containers = new ElementsMap()
+    this.cards = new ElementsMap()
+    this.players = new ElementsMap()
 
     const testText = new Text('table added!', {
       fill: 0xffaa66,
@@ -172,19 +174,19 @@ class Table extends Component {
 
     this.on('players.add', data => {
       const newPlayer = new Player(data.player)
-      this.elements.add(newPlayer)
+      this.players.add(newPlayer)
       this.addChild(newPlayer)
       this.updatePlayers()
     })
     this.on('players.remove', data => {
-      const player = this.elements.getByType('player')
+      const player = this.players.getByType('player')
         .find(el => el.idx === data.idx)
-      this.elements.remove(player.id)
+      this.players.remove(player.id)
       this.removeChild(player)
       this.updatePlayers()
     })
     this.on('players.replace', data => {
-      const player = this.elements.getByType('player')
+      const player = this.players.getByType('player')
         .find(el => el.idx === data.idx)
       this.removeChild(player)
       this.addChild(new Player(data.player))
@@ -192,7 +194,7 @@ class Table extends Component {
     })
     this.on('players.update', data => {
       // console.log('players.update!', data)
-      const player = this.elements.getByType('player')
+      const player = this.players.getByType('player')
         .find(el => el.idx === data.idx)
       player.props[data.attribute] = data.value
       this.updatePlayers()
@@ -203,21 +205,21 @@ class Table extends Component {
     this.on('containers.add', data => {
       const type = data.container.type
       const newContainer = new containerTypeMap[type](data.container)
-      this.elements.add(newContainer)
+      this.containers.add(newContainer)
 
-      const parent = this.elements.getById(newContainer.parentId) || this
+      const parent = this.containers.getById(newContainer.parentId) || this
       parent.addChild(newContainer)
     })
     // this.on('containers.remove', data => {
-    //   const container = this.elements.getByType(data.container.type)
+    //   const container = this.containers.getByType(data.container.type)
     //     .find(el => el.idx === data.idx)
 
-    //   this.elements.remove(player.id)
+    //   this.containers.remove(player.id)
     //   this.removeChild(player)
     //   this.updatePlayers()
     // })
     // this.on('containers.replace', data => {
-    //   const player = this.elements.getByType('player')
+    //   const player = this.containers.getByType('player')
     //     .find(el => el.idx === data.idx)
     //   this.removeChild(player)
     //   this.addChild(new Player(data.player))
@@ -225,7 +227,7 @@ class Table extends Component {
     // })
     // this.on('containers.update', data => {
     //   console.log('players.update!', data)
-    //   const player = this.elements.getByType('player')
+    //   const player = this.containers.getByType('player')
     //     .find(el => el.idx === data.idx)
     //   player.props[data.attribute] = data.value
     //   this.updatePlayers()
@@ -237,18 +239,17 @@ class Table extends Component {
       // idx, card
       const card = new ClassicCard(data.card)
       this.addChild(card)
-      this.elements.add(card)
+      this.cards.add(card)
     })
     this.on('cards.attribute.update', data => {
       // idx, attribute, value
-      const card = new ClassicCard(data.card)
-      this.addChild(card)
-      this.elements.add(card)
+      const card = this.cards.getByIdx(data.idx)
+      card.props[data.attribute] = data.value
     })
   }
 
   updatePlayers() {
-    this.elements.getByType('player').forEach(positionPlayers)
+    this.players.forEach(positionPlayers)
   }
 
 }
@@ -270,6 +271,9 @@ class ElementsMap {
   getById(id) {
     return this._idList.get(id)
   }
+  getByIdx(idx) {
+    return this._elements.filter(element => element.idx === idx)
+  }
   getByType(type) {
     return this._elements.filter(element => element.type === type)
   }
@@ -278,6 +282,9 @@ class ElementsMap {
   }
   map(fn) {
     return this._elements.map(fn)
+  }
+  forEach(fn) {
+    return this._elements.forEach(fn)
   }
 }
 

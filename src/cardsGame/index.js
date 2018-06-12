@@ -15,5 +15,3 @@ export { default as Player } from './player/player'
 export { default as PlayerEvent } from './events/playerEvent'
 
 export { default as Game } from './game'
-
-import './main.scss'
