@@ -5,18 +5,15 @@
     "esModuleInterop": true,
     "lib": [
       "dom",
-      "es2015",
-      "es2016"
+      "es6"
     ],
-    "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "lib",
-    // "outFile": ".lib/index.js",
     "preserveConstEnums": true,
     "removeComments": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es5"
+    "target": "es6"
   },
   "include": [
     "src/**/*"

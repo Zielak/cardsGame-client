@@ -13,17 +13,15 @@ module.exports = env => {
     devServer: {
       contentBase: './dist'
     },
+    resolve: {
+      extensions: ['.js', '.ts'],
+    },
     module: {
       rules: [
         {
-          test: /\.(js)$/,
-          exclude: /node_modules/,
-          loaders: ['babel-loader'],
-        },
-        {
           test: /\.(ts)$/,
           exclude: /node_modules/,
-          loaders: ['ts-loader'],
+          loaders: ['babel-loader', 'ts-loader'],
         },
         {
           test: /\.scss$/,

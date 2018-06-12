@@ -1,6 +1,6 @@
 import { Application, Text } from 'pixi.js'
 import Table from './table/table'
-import EventEmitter from 'eventemitter3'
+import { EventEmitter } from 'eventemitter3'
 import { log } from './utils'
 import * as colyseus from 'colyseus.js'
 
@@ -10,7 +10,7 @@ import {
   playersListener,
 } from './listeners/index'
 
-class Game extends EventEmitter {
+export default class Game extends EventEmitter {
 
   propTypes: object
   app: Application
@@ -126,5 +126,3 @@ class Game extends EventEmitter {
     return this.app.stage
   }
 }
-
-export default Game
