@@ -1,5 +1,4 @@
-import { appendIdx } from '../../../shared/utils'
-import { log } from '../utils'
+import { appendIdx, log } from '../utils'
 
 export default (target, room) => {
   room.listen('containers/:idx', (change) => {

@@ -9,7 +9,7 @@ import { Graphics, Text } from 'pixi.js'
 import PropTypes from 'prop-types'
 import ClassicCard from '../../card/classicCard'
 import Component from '../../component'
-import { procNumberFromString } from '../../../../shared/utils'
+import { procNumberFromString } from '../../utils'
 
 const labelText = (children) => `PILE of ${children.length} cards`
 

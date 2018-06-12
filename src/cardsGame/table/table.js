@@ -28,7 +28,7 @@ import {
   // findAllParents,
   findAllChildren,
   def,
-} from '../../../shared/utils.js'
+} from '../utils.js'
 
 // import Player from '../player/player'
 import Deck from '../containers/deck/deck'

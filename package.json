@@ -57,9 +57,7 @@
   },
   "nyc": {
     "include": [
-      "app/*",
-      "client/*",
-      "shared/*"
+      "src/**/*"
     ],
     "all": true,
     "reporter": [
