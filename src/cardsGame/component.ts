@@ -1,39 +1,50 @@
 import { Container } from 'pixi.js'
-// import PropTypes from 'prop-types'
-import checkPropTypes from 'prop-types/checkPropTypes'
 
-/**
- *
- *
- * @class Component
- * @extends {Container}
- */
-class Component extends Container {
+export interface IProps {
+  id: string,
+  idx: number,
+  children: Component<any>[],
+  type: string
+}
+
+export interface IComponent {
+  componentDidUpdate: (props: any) => void
+}
+
+export class Component<T extends IProps> extends Container implements IComponent {
+
+  _props: T
+  _updateScheduled: boolean = false
+  _propsProxy
+
+  propTypes: { [key: string]: any }
 
   /**
    * Creates an instance of Component.
    * @param {any} props
    * @memberof Component
    */
-  constructor(props = {}) {
+  constructor(props: T) {
     super()
-    this._props = { ...props }
-    this._updateScheduled = false
+    // TODO: maybe clone and loose reference. But it's T...
+    this._props = props
     this._generatePropsProxy()
   }
 
   _generatePropsProxy() {
-    this._propsProxy = new Proxy(this._props, {
+    this._propsProxy = new Proxy<T>(this._props, {
       set: (target, prop, value) => {
         if (target[prop] === value) {
           return true
         }
         target[prop] = value
-        checkPropTypes(this.propTypes, target, 'prop', this._componentName)
+        // checkPropTypes(this.propTypes, target, 'prop', this._componentName)
         this._scheduleUpdate()
         return true
       }
     })
+
+    this._propsProxy
   }
 
   _scheduleUpdate() {
@@ -48,7 +59,7 @@ class Component extends Container {
     }
   }
 
-  get props() {
+  get props(): T {
     return this._propsProxy
   }
 
@@ -58,21 +69,20 @@ class Component extends Container {
     }
   }
 
-  get _componentName() {
-    return 'Component'
-  }
-
-  get idx() {
-    return this.props.idx
-  }
   get id() {
     return this.props.id
+  }
+  get idx() {
+    return this.props.idx
   }
   get type() {
     return this.props.type
   }
+  get _componentName() {
+    return 'Component'
+  }
 
-  componentDidUpdate(props) { } // eslint-disable-line no-unused-vars
+  componentDidUpdate(props) { }
 
 }
 

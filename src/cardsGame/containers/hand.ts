@@ -1,0 +1,48 @@
+/**
+ * Container of cards that are visible only to the
+ * player who owns them
+ */
+import { Component } from '../component'
+
+class Hand extends Component<HandProps>{
+
+  render() {
+    // return (
+    //   <div className="Hand" style={this.parseStyle()}>
+
+    //   </div>
+    // )
+  }
+
+  parseStyle() {
+    return {
+      left: this.props.x + '%',
+      top: this.props.y + '%',
+      '--angle': this.props.angle + 'deg',
+    }
+  }
+
+  static restyleChild = (child, idx, length) => {
+    const half = length * 0.5
+    const x = -half * 1.6 + idx * 1.6
+    return {
+      x: x,
+      y: -x * (x / 14),
+      angle: -half * 8 + (idx + 0.5) * 8,
+      zIndex: idx + 1,
+    }
+  }
+}
+
+type HandProps = {
+  id: string,
+  children: Component<any>[],
+
+  localTransform: object,
+  x: number,
+  y: number,
+  angle: number,
+  zIndex: number,
+}
+
+export default Hand

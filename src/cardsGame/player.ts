@@ -1,17 +1,19 @@
 import { Sprite, Text } from 'pixi.js'
-import PropTypes from 'prop-types'
-import { Component } from '../index'
+import { Component, IProps } from './component'
 
-class Player extends Component {
+export class Player extends Component<PlayerProps> {
 
-  constructor(props) {
+  icon: Sprite
+  label: Text
+
+  constructor(props: PlayerProps) {
     super(props)
     this.icon = new Sprite()
     this.label = new Text(this.props.name, {
       align: 'center',
       fill: ['#ffffff', '#00ff99'],
       stroke: '#4a1850',
-      strokeThickness: 5,
+      strokeThickness: 5
     })
 
     this.addChild(this.icon)
@@ -24,15 +26,12 @@ class Player extends Component {
 
 }
 
-Player.propTypes = {
-  id: PropTypes.string,
-  name: PropTypes.string,
-  children: PropTypes.array,
-
-  x: PropTypes.number,
-  y: PropTypes.number,
-  angle: PropTypes.number,
-  zIndex: PropTypes.number,
+interface PlayerProps extends IProps {
+  name: string,
+  x: number,
+  y: number,
+  angle: number,
+  zIndex: number,
 }
 
 export default Player

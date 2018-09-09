@@ -2,22 +2,20 @@
  * Container of cards with loosely placed
  * and slightly rotated cards
  */
-/**
- * Container of neatly packed cards in one column.
- */
 import { Graphics, Text } from 'pixi.js'
-import PropTypes from 'prop-types'
-import ClassicCard from '../../card/classicCard'
-import Component from '../../component'
-import { procNumberFromString } from '../../utils'
+import ClassicCard from '../card/classicCard'
+import Component, { Props } from '../component'
+import { procNumberFromString } from '../utils'
 
 const labelText = (children) => `PILE of ${children.length} cards`
 
-class Pile extends Component {
+class Pile extends Component<PileProps> {
+
+  bg: Graphics
+  label: Text
 
   constructor(props) {
     super(props)
-
     this.draw()
   }
 
@@ -41,26 +39,23 @@ class Pile extends Component {
   redraw() {
     this.label.text = labelText(this.props.children)
   }
-}
 
-Pile.restyleChild = (child, idx/*, length*/) => {
-  return {
-    x: Math.cos(procNumberFromString(child.id, -2, 2)),
-    y: Math.sin(procNumberFromString(child.id, -2, 2)),
-    angle: procNumberFromString(child.id, -45, 45),
-    zIndex: idx + 5,
+  static restyleChild = (child, idx/*, length*/) => {
+    return {
+      x: Math.cos(procNumberFromString(child.id, -2, 2)),
+      y: Math.sin(procNumberFromString(child.id, -2, 2)),
+      angle: procNumberFromString(child.id, -45, 45),
+      zIndex: idx + 5,
+    }
   }
 }
 
-Pile.propTypes = {
-  id: PropTypes.string,
-  children: PropTypes.array,
-
-  localTransform: PropTypes.object,
-  x: PropTypes.number,
-  y: PropTypes.number,
-  angle: PropTypes.number,
-  zIndex: PropTypes.number,
+type PileProps = Props & {
+  // localTransform: object,
+  x: number,
+  y: number,
+  angle: number,
+  zIndex: number,
 }
 
 export default Pile

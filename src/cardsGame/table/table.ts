@@ -1,18 +1,18 @@
-import { Text } from 'pixi.js'
+import { Text, Container } from 'pixi.js'
 import {
   Player,
   Game,
   ClassicCard
-} from '../index'
-import Deck from '../containers/deck/deck'
-import Pile from '../containers/pile/pile'
-import Hand from '../containers/hand/hand'
-import Component from '../component'
+} from '..'
+import Deck from '../containers/deck'
+import Pile from '../containers/pile'
+import Hand from '../containers/hand'
+import Component, { IProps } from '../component'
+import { getByTypeFromMap, getByIdFromMap, getByIdxFromMap } from '../utils';
+import { IContainer } from '../containers/container';
 
-const containerTypeMap = {
-  deck: Deck,
-  pile: Pile,
-  hand: Hand,
+const create = <T>(cls: { new(options: any): T }, options: any): T => {
+  return new cls(options)
 }
 
 /**
@@ -144,15 +144,15 @@ const applyParentTransform = (element, idx, everything) => {
 
 // const playerIdx = (idx) => (player) => player.idx === idx
 
-class Table extends Component {
+class Table extends Component<TableProps> {
 
-  constructor(props = {}) {
+  containers = new Map<string, Component<any>>()
+  // TODO: Cards could be non-standard... modularise it some day.
+  cards = new Map<string, ClassicCard>()
+  players = new Map<string, Player>()
+
+  constructor(props: IProps) {
     super(props)
-
-    this.containers = new ElementsMap()
-    this.cards = new ElementsMap()
-    this.players = new ElementsMap()
-
     const testText = new Text('table added!', {
       fill: 0xffaa66,
       fontSize: 12
@@ -174,40 +174,53 @@ class Table extends Component {
 
     this.on('players.add', data => {
       const newPlayer = new Player(data.player)
-      this.players.add(newPlayer)
+      this.players.set(newPlayer.id, newPlayer)
       this.addChild(newPlayer)
       this.updatePlayers()
     })
     this.on('players.remove', data => {
-      const player = this.players.getByType('player')
+      const player = getByTypeFromMap('player', this.players)
         .find(el => el.idx === data.idx)
-      this.players.remove(player.id)
-      this.removeChild(player)
-      this.updatePlayers()
+      if (player !== undefined) {
+        this.players.delete(player.id)
+        this.removeChild(player)
+        this.updatePlayers()
+      }
     })
     this.on('players.replace', data => {
-      const player = this.players.getByType('player')
+      const player = getByTypeFromMap('player', this.players)
         .find(el => el.idx === data.idx)
-      this.removeChild(player)
-      this.addChild(new Player(data.player))
-      this.updatePlayers()
+      if (player !== undefined) {
+        this.removeChild(player)
+        this.addChild(new Player(data.player))
+        this.updatePlayers()
+      }
     })
     this.on('players.update', data => {
       // console.log('players.update!', data)
-      const player = this.players.getByType('player')
+      const player = getByTypeFromMap('player', this.players)
         .find(el => el.idx === data.idx)
-      player.props[data.attribute] = data.value
-      this.updatePlayers()
+      if (player !== undefined) {
+        player.props[data.attribute] = data.value
+        this.updatePlayers()
+      }
     })
   }
 
   prepareContainers() {
+
     this.on('containers.add', data => {
       const type = data.container.type
-      const newContainer = new containerTypeMap[type](data.container)
-      this.containers.add(newContainer)
+      let newContainer
+      switch (type) {
+        case 'deck': newContainer = create(Deck, data.container); break
+        case 'pile': newContainer = create(Pile, data.container); break
+        case 'hand': newContainer = create(Hand, data.container); break
+      }
 
-      const parent = this.containers.getById(newContainer.parentId) || this
+      this.containers.set(newContainer.id, newContainer)
+
+      const parent = getByIdFromMap(newContainer.parentId, this.containers) || this
       parent.addChild(newContainer)
     })
     // this.on('containers.remove', data => {
@@ -239,12 +252,13 @@ class Table extends Component {
       // idx, card
       const card = new ClassicCard(data.card)
       this.addChild(card)
-      this.cards.add(card)
+      this.cards.set(card.id, card)
     })
     this.on('cards.attribute.update', data => {
       // idx, attribute, value
-      const card = this.cards.getByIdx(data.idx)
-      card.props[data.attribute] = data.value
+      // FIXME: something smells here.
+      // const card = getByIdxFromMap(data.idx, this.cards)
+      // card.props[data.attribute] = data.value
     })
   }
 
@@ -254,38 +268,6 @@ class Table extends Component {
 
 }
 
-class ElementsMap {
-  constructor() {
-    this._idList = new Map()
-    this._elements = []
-  }
-  add(element) {
-    this._idList.set(element.id, element)
-    this._elements.push(element)
-  }
-  remove(id) {
-    this._idList.delete(id)
-    this._elements = this._elements.filter(el => el.id !== id)
-  }
-
-  getById(id) {
-    return this._idList.get(id)
-  }
-  getByIdx(idx) {
-    return this._elements.filter(element => element.idx === idx)
-  }
-  getByType(type) {
-    return this._elements.filter(element => element.type === type)
-  }
-  filter(fn) {
-    return this._elements.filter(fn)
-  }
-  map(fn) {
-    return this._elements.map(fn)
-  }
-  forEach(fn) {
-    return this._elements.forEach(fn)
-  }
-}
+interface TableProps extends IProps { }
 
 export default Table

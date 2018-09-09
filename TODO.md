@@ -1,0 +1,2 @@
+- [ ] Get rid of `localTransform` in props?
+- [ ] Write elements rendering and ditch SCSS files

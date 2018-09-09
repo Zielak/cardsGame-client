@@ -4,11 +4,7 @@ import { EventEmitter } from 'eventemitter3'
 import { log } from './utils'
 import * as colyseus from 'colyseus.js'
 
-import {
-  cardsListener,
-  containersListener,
-  playersListener,
-} from './listeners/index'
+import Listeners from './listeners/index'
 
 export default class Game extends EventEmitter {
 
@@ -113,9 +109,9 @@ export default class Game extends EventEmitter {
       this.host = change.value
     })
 
-    playersListener(this.table, room)
-    containersListener(this.table, room)
-    cardsListener(this.table, room)
+    Listeners.playersListener(this.table, room)
+    Listeners.containersListener(this.table, room)
+    Listeners.cardsListener(this.table, room)
 
     room.listen('GameStart', function () {
       log('GameStart!? ', arguments)
