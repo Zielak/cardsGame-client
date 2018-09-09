@@ -21,7 +21,7 @@ module.exports = env => {
         {
           test: /\.(ts)$/,
           exclude: /node_modules/,
-          loaders: ['babel-loader', 'ts-loader'],
+          loaders: ['ts-loader'],
         },
         {
           test: /\.scss$/,

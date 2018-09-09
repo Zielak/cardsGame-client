@@ -3,7 +3,7 @@ import { Container } from 'pixi.js'
 export interface IProps {
   id: string,
   idx: number,
-  children: Component<any>[],
+  children?: Component<any>[],
   type: string
 }
 
@@ -85,5 +85,3 @@ export class Component<T extends IProps> extends Container implements IComponent
   componentDidUpdate(props) { }
 
 }
-
-export default Component

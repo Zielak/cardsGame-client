@@ -4,12 +4,12 @@ import {
   Game,
   ClassicCard
 } from '..'
-import Deck from '../containers/deck'
-import Pile from '../containers/pile'
-import Hand from '../containers/hand'
-import Component, { IProps } from '../component'
-import { getByTypeFromMap, getByIdFromMap, getByIdxFromMap } from '../utils';
-import { IContainer } from '../containers/container';
+import { Deck } from '../containers/deck'
+import { Pile } from '../containers/pile'
+import { Hand } from '../containers/hand'
+import { Component, IProps } from '../component'
+import { getByTypeFromMap, getByIdFromMap, getByIdxFromMap } from '../utils'
+import { IContainer } from '../containers/container'
 
 const create = <T>(cls: { new(options: any): T }, options: any): T => {
   return new cls(options)
@@ -151,8 +151,12 @@ class Table extends Component<TableProps> {
   cards = new Map<string, ClassicCard>()
   players = new Map<string, Player>()
 
-  constructor(props: IProps) {
-    super(props)
+  constructor() {
+    super({
+      id: 'table',
+      type: 'table',
+      idx: 0
+    })
     const testText = new Text('table added!', {
       fill: 0xffaa66,
       fontSize: 12

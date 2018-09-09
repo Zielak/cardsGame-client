@@ -2,9 +2,9 @@
  * Container of cards that are visible only to the
  * player who owns them
  */
-import { Component } from '../component'
+import { Component, IProps } from '../component'
 
-class Hand extends Component<HandProps>{
+export class Hand extends Component<HandProps>{
 
   render() {
     // return (
@@ -34,15 +34,10 @@ class Hand extends Component<HandProps>{
   }
 }
 
-type HandProps = {
-  id: string,
-  children: Component<any>[],
-
-  localTransform: object,
+interface HandProps extends IProps {
+  // localTransform: object,
   x: number,
   y: number,
   angle: number,
   zIndex: number,
 }
-
-export default Hand

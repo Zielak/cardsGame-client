@@ -33,5 +33,3 @@ interface PlayerProps extends IProps {
   angle: number,
   zIndex: number,
 }
-
-export default Player

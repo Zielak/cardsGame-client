@@ -8,7 +8,7 @@ import { IContainer } from './container'
 
 const labelText = (children) => `DECK of ${children.length} cards`
 
-class Deck extends Component<DeckProps> implements IContainer {
+export class Deck extends Component<DeckProps> implements IContainer {
 
   bg: Graphics
   label: Text
@@ -66,5 +66,3 @@ interface DeckProps extends IProps {
   angle: number,
   zIndex: number,
 }
-
-export default Deck

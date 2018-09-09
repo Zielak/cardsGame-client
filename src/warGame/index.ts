@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types'
 import { Game } from '../cardsGame/index'
+import { IProps } from '../cardsGame/component';
 
 class WarGame extends Game {
 
@@ -10,17 +10,18 @@ class WarGame extends Game {
   storeToTable() {
 
   }
+}
 
-  propTypes = {
-    testDealHandler: PropTypes.func,
+// TODO: Why did I needed that???
+interface IWarGameProps extends IProps {
+  testDealHandler: () => void,
 
-    players: PropTypes.object,
-    cards: PropTypes.array,
-    containers: PropTypes.array,
-    room: PropTypes.object,
+  players: any,
+  cards: [],
+  containers: [],
+  room: any,
 
-    host: PropTypes.string,
-  }
+  host: string,
 }
 
 export default WarGame

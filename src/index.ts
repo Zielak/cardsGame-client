@@ -3,8 +3,6 @@ import { Client } from 'colyseus.js'
 // import Lobby from './lobby/index'
 import WarGame from './warGame/index'
 
-import './styles.scss'
-
 // === === === === === === == = -
 
 const host = window.document.location.host.replace(/:.*/, '')

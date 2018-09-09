@@ -3,13 +3,13 @@
  * and slightly rotated cards
  */
 import { Graphics, Text } from 'pixi.js'
-import ClassicCard from '../card/classicCard'
-import Component, { Props } from '../component'
+import { ClassicCard } from '../card/classicCard'
+import { Component, IProps } from '../component'
 import { procNumberFromString } from '../utils'
 
 const labelText = (children) => `PILE of ${children.length} cards`
 
-class Pile extends Component<PileProps> {
+export class Pile extends Component<PileProps> {
 
   bg: Graphics
   label: Text
@@ -50,12 +50,10 @@ class Pile extends Component<PileProps> {
   }
 }
 
-type PileProps = Props & {
+interface PileProps extends IProps {
   // localTransform: object,
   x: number,
   y: number,
   angle: number,
   zIndex: number,
 }
-
-export default Pile

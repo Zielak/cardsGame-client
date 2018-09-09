@@ -8,7 +8,6 @@ import Listeners from './listeners/index'
 
 export default class Game extends EventEmitter {
 
-  propTypes: object
   app: Application
   room: colyseus.Room
   client: colyseus.Client
