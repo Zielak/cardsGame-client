@@ -1,7 +1,7 @@
 /**
  * Container of neatly packed cards in one column.
  */
-import { Text, Graphics } from 'pixi.js'
+import { Text, Graphics, DisplayObject } from 'pixi.js'
 import { ClassicCard } from '../card/classicCard'
 import { Component, IProps } from '../component'
 import { IContainer } from './container'
@@ -16,6 +16,7 @@ export class Deck extends Component<DeckProps> implements IContainer {
   constructor(props: DeckProps) {
     super(props)
     this.draw()
+    this.redraw()
   }
 
   draw() {
@@ -42,19 +43,19 @@ export class Deck extends Component<DeckProps> implements IContainer {
 
   redraw() {
     this.label.text = labelText(this.props.children)
+    const children = this.props.children || []
+    children.forEach(Deck.restyleChild)
   }
 
   componentDidUpdate() {
     this.redraw()
   }
 
-  static restyleChild(child, idx/*, length*/) {
-    return {
-      x: idx * .1,
-      y: -idx * .1,
-      angle: 0,
-      zIndex: idx + 5,
-    }
+  static restyleChild(child: Component<any>, idx/*, length*/) {
+    child.props.x = idx * .1
+    child.props.y = -idx * .1
+    child.props.rotation = 0
+    // child.zIndex = idx + 5
   }
 
 }

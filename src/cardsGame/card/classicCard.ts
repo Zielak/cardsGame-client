@@ -32,10 +32,15 @@ export class ClassicCard extends Component<ClassicCardProps> {
       this.getRankText(this.props.rank),
       this.getRankStyle(this.props.rank)
     )
+    this.rank.x = -ClassicCard.width / 2 + 5
+    this.rank.y = -ClassicCard.height / 2 + 5
+
     this.suit = new Text(
       this.getSuitText(this.props.suit),
       this.getSuitStyle(this.props.suit)
     )
+    this.suit.x = -ClassicCard.width / 2 + 5
+    this.suit.y = -ClassicCard.height / 2 + 5 + this.rank.height
 
     this.addChild(this.bg)
     this.addChild(this.rank)

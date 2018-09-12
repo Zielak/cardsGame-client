@@ -23,7 +23,9 @@ export default class Game extends EventEmitter {
     // The application will create a renderer using WebGL, if possible,
     // with a fallback to a canvas render. It will also setup the ticker
     // and the root stage PIXI.Container.
-    this.app = new Application(Game.width, Game.height, { backgroundColor: 0x1099bb })
+    this.app = new Application(Game.width, Game.height, {
+      backgroundColor: 0x1099bb
+    })
 
     // The application will create a canvas element for you that you
     // can then insert into the DOM.

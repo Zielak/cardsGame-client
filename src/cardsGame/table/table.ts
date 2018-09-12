@@ -1,4 +1,4 @@
-import { Text, Container } from 'pixi.js'
+import { Text } from 'pixi.js'
 import {
   Player,
   Game,
@@ -10,10 +10,6 @@ import { Hand } from '../containers/hand'
 import { Component, IProps } from '../component'
 import { getByTypeFromMap, getByIdFromMap, getByIdxFromMap } from '../utils'
 import { IContainer } from '../containers/container'
-
-const create = <T>(cls: { new(options: any): T }, options: any): T => {
-  return new cls(options)
-}
 
 /**
  * Decides where each part of the game should be placed,
@@ -157,6 +153,10 @@ class Table extends Component<TableProps> {
       type: 'table',
       idx: 0
     })
+
+    this.x = Game.width / 2
+    this.y = Game.height / 2
+
     const testText = new Text('table added!', {
       fill: 0xffaa66,
       fontSize: 12
@@ -213,13 +213,17 @@ class Table extends Component<TableProps> {
 
   prepareContainers() {
 
+    const create = <T>(cls: { new(options: any): T }, options: any): T => {
+      return new cls(options)
+    }
+
     this.on('containers.add', data => {
       const type = data.container.type
       let newContainer
       switch (type) {
-        case 'deck': newContainer = create(Deck, data.container); break
-        case 'pile': newContainer = create(Pile, data.container); break
-        case 'hand': newContainer = create(Hand, data.container); break
+        case 'deck': newContainer = create<Deck>(Deck, data.container); break
+        case 'pile': newContainer = create<Pile>(Pile, data.container); break
+        case 'hand': newContainer = create<Hand>(Hand, data.container); break
       }
 
       this.containers.set(newContainer.id, newContainer)
