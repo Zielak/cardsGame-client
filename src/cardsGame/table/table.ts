@@ -8,7 +8,7 @@ import { Deck } from '../containers/deck'
 import { Pile } from '../containers/pile'
 import { Hand } from '../containers/hand'
 import { Component, IProps } from '../component'
-import { getByTypeFromMap, getByIdFromMap, getByIdxFromMap } from '../utils'
+import { getByTypeFromMap, getByIdFromMap } from '../utils'
 import { IContainer } from '../containers/container'
 
 /**
@@ -256,18 +256,29 @@ class Table extends Component<TableProps> {
   }
 
   addCardsListeners() {
-    this.on('cards.add', data => {
-      // idx, card
+    this.on('cards.add', (data) => {
+      // idx: elementID, card
       const card = new ClassicCard(data.card)
-      this.addChild(card)
+      const targetParent = this.getParentContainer(data.card.parentId)
+      targetParent.addChild(card)
       this.cards.set(card.id, card)
     })
     this.on('cards.attribute.update', data => {
-      // idx, attribute, value
+      // idx: elementID, attribute, value
       // FIXME: something smells here.
-      // const card = getByIdxFromMap(data.idx, this.cards)
-      // card.props[data.attribute] = data.value
+      const card = getByIdFromMap(data.idx, this.cards)
+      if (card) {
+        card.props[data.attribute] = data.value
+      }
     })
+  }
+
+  private getParentContainer(parentId: string): Component<any> {
+    const result = this.containers.get(parentId)
+    if (!parentId || !result) {
+      return this
+    }
+    return result
   }
 
   updatePlayers() {

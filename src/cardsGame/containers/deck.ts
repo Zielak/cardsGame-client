@@ -16,7 +16,8 @@ export class Deck extends Component<DeckProps> implements IContainer {
   constructor(props: DeckProps) {
     super(props)
     this.draw()
-    this.redraw()
+    // FIXME: don't setTimeout!
+    setTimeout(() => this.redraw(), 100)
   }
 
   draw() {
@@ -43,8 +44,7 @@ export class Deck extends Component<DeckProps> implements IContainer {
 
   redraw() {
     this.label.text = labelText(this.props.children)
-    const children = this.props.children || []
-    children.forEach(Deck.restyleChild)
+    this.children.forEach(Deck.restyleChild)
   }
 
   componentDidUpdate() {
@@ -52,9 +52,9 @@ export class Deck extends Component<DeckProps> implements IContainer {
   }
 
   static restyleChild(child: Component<any>, idx/*, length*/) {
-    child.props.x = idx * .1
-    child.props.y = -idx * .1
-    child.props.rotation = 0
+    child.x = idx * .3
+    child.y = -idx * .3
+    child.rotation = 0
     // child.zIndex = idx + 5
   }
 

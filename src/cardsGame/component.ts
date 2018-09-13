@@ -50,9 +50,9 @@ export class Component<T extends IProps> extends Container implements IComponent
   _scheduleUpdate() {
     if (!this._updateScheduled) {
       this._updateScheduled = true
-      // console.log('update scheduled for later')
+      console.log('update scheduled for later')
       setTimeout(() => {
-        // console.log('componentDidUpdate!')
+        console.log('componentDidUpdate!')
         this.componentDidUpdate.call(this, this.props)
         this._updateScheduled = false
       }, 0)

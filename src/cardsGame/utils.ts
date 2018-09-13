@@ -70,27 +70,27 @@ export const getByTypeFromMap = <T extends Component<any>>(type: string, map: Ma
   return found
 }
 
-export const getByIdFromMap = <T extends Component<any>>(type: string, map: Map<string, T>): T | undefined => {
+export const getByIdFromMap = <T extends Component<any>>(id: string, map: Map<string, T>): T | undefined => {
   let found: T | undefined
   map.forEach((element) => {
     if (found) return
-    if (element.type === type) {
+    if (element.id === id) {
       found = element
     }
   })
   return found
 }
 
-export const getByIdxFromMap = <T extends Component<any>>(type: string, map: Map<string, T>): T | undefined => {
-  let found: T | undefined
-  map.forEach((element) => {
-    if (found) return
-    if (element.type === type) {
-      found = element
-    }
-  })
-  return found
-}
+// export const getByIdxFromMap = <T extends Component<any>>(type: string, map: Map<string, T>): T | undefined => {
+//   let found: T | undefined
+//   map.forEach((element) => {
+//     if (found) return
+//     if (element.type === type) {
+//       found = element
+//     }
+//   })
+//   return found
+// }
 
 /**
  * OTHER
