@@ -3,6 +3,7 @@ import { Container } from 'pixi.js'
 export interface IProps {
   id: string,
   idx: number,
+  childrenIDs?: { [key: string]: string },
   children?: Component<any>[],
   type: string
 }
@@ -31,7 +32,7 @@ export class Component<T extends IProps> extends Container implements IComponent
     this._generatePropsProxy()
   }
 
-  _generatePropsProxy() {
+  private _generatePropsProxy() {
     this._propsProxy = new Proxy<T>(this._props, {
       set: (target, prop, value) => {
         if (target[prop] === value) {
@@ -41,6 +42,14 @@ export class Component<T extends IProps> extends Container implements IComponent
         // checkPropTypes(this.propTypes, target, 'prop', this._componentName)
         this._scheduleUpdate()
         return true
+      },
+      get: (target, property) => {
+        if (property === 'children') {
+          // TODO: to reflect server behaviour
+          // this should return an array of Components, not just IDs
+          return target.childrenIDs ? Object.keys(target.childrenIDs) : undefined
+        }
+
       }
     })
 

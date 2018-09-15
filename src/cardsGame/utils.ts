@@ -172,5 +172,5 @@ export const procNumberFromString = (str, min = 0, max = 1) => {
   return percent
 }
 
-export const appendIdx = (object, idx) => ({ ...object, idx })
+// export const appendIdx = (object, idx) => ({ ...object, idx })
 

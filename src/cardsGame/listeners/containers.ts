@@ -1,11 +1,11 @@
-import { appendIdx, log } from '../utils'
+import { log } from '../utils'
 
 export default (target, room) => {
   room.listen('containers/:idx', (change) => {
     log('container changed: ', change)
     target.emit('containers.' + change.operation, {
       idx: parseInt(change.path.idx),
-      container: appendIdx(change.value, parseInt(change.path.idx)),
+      container: change.value,
     })
   })
 
@@ -23,7 +23,7 @@ export default (target, room) => {
     target.emit(`containers.${change.operation}Child`, {
       idx: parseInt(change.path.idx),
       childIdx: parseInt(change.path.childIdx),
-      value: appendIdx(change.value, parseInt(change.path.childIdx)),
+      value: change.value,
     })
   })
 }
