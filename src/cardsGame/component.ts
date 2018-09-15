@@ -1,11 +1,12 @@
 import { Container } from 'pixi.js'
 
 export interface IProps {
-  id: string,
-  idx: number,
+  id?: string,
+  order?: number,
   childrenIDs?: { [key: string]: string },
   children?: Component<any>[],
-  type: string
+  name?: string,
+  type?: string
 }
 
 export interface IComponent {
@@ -14,9 +15,9 @@ export interface IComponent {
 
 export class Component<T extends IProps> extends Container implements IComponent {
 
-  _props: T
+  _props: { [key: string]: any & T }
   _updateScheduled: boolean = false
-  _propsProxy
+  _propsProxy: { [key: string]: any & T }
 
   propTypes: { [key: string]: any }
 
@@ -25,15 +26,20 @@ export class Component<T extends IProps> extends Container implements IComponent
    * @param {any} props
    * @memberof Component
    */
-  constructor(props: T) {
+  constructor(props?: T) {
     super()
     // TODO: maybe clone and loose reference. But it's T...
-    this._props = props
+    this._props = {}
+    if (props) {
+      for (let key in props) {
+        this._props[key] = props[key]
+      }
+    }
     this._generatePropsProxy()
   }
 
   private _generatePropsProxy() {
-    this._propsProxy = new Proxy<T>(this._props, {
+    this._propsProxy = new Proxy(this._props, {
       set: (target, prop, value) => {
         if (target[prop] === value) {
           return true
@@ -52,8 +58,6 @@ export class Component<T extends IProps> extends Container implements IComponent
 
       }
     })
-
-    this._propsProxy
   }
 
   _scheduleUpdate() {
@@ -68,7 +72,7 @@ export class Component<T extends IProps> extends Container implements IComponent
     }
   }
 
-  get props(): T {
+  get props() {
     return this._propsProxy
   }
 
@@ -80,9 +84,6 @@ export class Component<T extends IProps> extends Container implements IComponent
 
   get id() {
     return this.props.id
-  }
-  get idx() {
-    return this.props.idx
   }
   get type() {
     return this.props.type

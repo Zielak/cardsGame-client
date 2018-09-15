@@ -1,34 +1,32 @@
-import test from 'ava'
-// import sinon from 'sinon'
-import Component from '../../../client/cardsGame/component'
+import { Component } from '../component'
 
-test(`_propsProxy is always present`, t => {
-  const comp = new Component({ test: 'test1' })
-  t.not(comp._propsProxy, undefined)
+test(`_propsProxy is always present`, () => {
+  const comp = new Component()
+  expect(comp._propsProxy).toBeDefined()
 })
 
-test(`props will give object with the same values as in _props`, t => {
+test(`props will give object with the same values as in _props`, () => {
   const comp = new Component({
-    test: 'test1',
-    one: 1
+    name: 'test1',
+    order: 2
   })
-  t.deepEqual(comp.props, comp._props)
+  expect(comp.props).toEqual(comp._props)
 })
 
-test('gets proper value via props proxy', t => {
+test('gets proper value via props proxy', () => {
   const comp = new Component({ test: 'test1' })
   t.is(comp.props.test, 'test1')
   t.is(comp._props.test, comp.props.test)
 })
 
-test('sets new value to existing prop via proxy', t => {
+test('sets new value to existing prop via proxy', () => {
   const comp = new Component({ test: 'test1' })
   comp.props.test = 'aaa'
 
   t.is(comp.props.test, 'aaa')
 })
 
-test('adds new prop via proxy', t => {
+test('adds new prop via proxy', () => {
   const comp = new Component({ test: 'test1' })
   comp.props.aaa = 'aaa'
 
@@ -36,7 +34,7 @@ test('adds new prop via proxy', t => {
   t.is(comp.props.test, 'test1')
 })
 
-test('schedules update after props change', t => new Promise(resolve => {
+test('schedules update after props change', () => new Promise(resolve => {
   const comp = new Component({ test: 'test1' })
 
   comp.componentDidUpdate = props => {
@@ -47,7 +45,7 @@ test('schedules update after props change', t => new Promise(resolve => {
   comp.props.test2 = 2
 }))
 
-test('does not schedule update if prop got the same value', t => new Promise((resolve, reject) => {
+test('does not schedule update if prop got the same value', () => new Promise((resolve, reject) => {
   const comp = new Component({ test: 'test1' })
 
   comp.componentDidUpdate = reject

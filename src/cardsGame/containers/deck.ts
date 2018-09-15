@@ -8,7 +8,7 @@ import { IContainer } from './container'
 
 const labelText = (children) => `DECK of ${children.length} cards`
 
-export class Deck extends Component<DeckProps> implements IContainer {
+export class Deck extends Component implements IContainer {
 
   bg: Graphics
   label: Text
@@ -17,7 +17,7 @@ export class Deck extends Component<DeckProps> implements IContainer {
     super(props)
     this.draw()
     // FIXME: don't setTimeout!
-    setTimeout(() => this.redraw(), 100)
+    setTimeout(() => this.redraw(), 0)
   }
 
   draw() {

@@ -150,8 +150,7 @@ class Table extends Component<TableProps> {
   constructor() {
     super({
       id: 'table',
-      type: 'table',
-      idx: 0
+      type: 'table'
     })
 
     this.x = Game.width / 2
