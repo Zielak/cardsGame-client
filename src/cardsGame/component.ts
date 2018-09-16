@@ -41,6 +41,7 @@ export class Component<T extends IProps> extends Container implements IComponent
   private _generatePropsProxy() {
     this._propsProxy = new Proxy(this._props, {
       set: (target, prop, value) => {
+        if (typeof prop === 'symbol') return false
         if (target[prop] === value) {
           return true
         }
@@ -49,13 +50,14 @@ export class Component<T extends IProps> extends Container implements IComponent
         this._scheduleUpdate()
         return true
       },
-      get: (target, property) => {
-        if (property === 'children') {
+      get: (target, prop) => {
+        if (typeof prop === 'symbol') return
+        if (prop === 'children') {
           // TODO: to reflect server behaviour
           // this should return an array of Components, not just IDs
           return target.childrenIDs ? Object.keys(target.childrenIDs) : undefined
         }
-
+        return target[prop]
       }
     })
   }
