@@ -181,7 +181,7 @@ class Table extends Component<TableProps> {
       this.addChild(newPlayer)
       this.updatePlayers()
     })
-    this.on('players.remove', data => {
+    /*this.on('players.remove', data => {
       const player = getByTypeFromMap('player', this.players)
         .find(el => el.idx === data.idx)
       if (player !== undefined) {
@@ -207,7 +207,7 @@ class Table extends Component<TableProps> {
         player.props[data.attribute] = data.value
         this.updatePlayers()
       }
-    })
+    })*/
   }
 
   prepareContainers() {

@@ -19,9 +19,6 @@ export default class ElementsMap {
   getById(id) {
     return this._idList.get(id)
   }
-  getByIdx(idx) {
-    return this._elements.filter(element => element.idx === idx)
-  }
   getByType(type) {
     return this._elements.filter(element => element.type === type)
   }
