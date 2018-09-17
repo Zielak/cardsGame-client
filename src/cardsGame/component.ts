@@ -1,7 +1,9 @@
 import { Container } from 'pixi.js'
 
+const components = new Map<string, Component<any>>()
+
 export interface IProps {
-  id?: string,
+  id: string,
   order?: number,
   childrenIDs?: { [key: string]: string },
   children?: Component<any>[],
@@ -26,16 +28,23 @@ export class Component<T extends IProps> extends Container implements IComponent
    * @param {any} props
    * @memberof Component
    */
-  constructor(props?: T) {
+  constructor(props: T) {
     super()
+    components.set(props.id, this)
     // TODO: maybe clone and loose reference. But it's T...
-    this._props = {}
+    this._props = {
+      id: props.id
+    }
     if (props) {
       for (let key in props) {
         this._props[key] = props[key]
       }
     }
     this._generatePropsProxy()
+
+    this.on('removed', () => {
+      components.delete(this._props.id)
+    })
   }
 
   private _generatePropsProxy() {
@@ -50,12 +59,15 @@ export class Component<T extends IProps> extends Container implements IComponent
         this._scheduleUpdate()
         return true
       },
-      get: (target, prop) => {
+      get: (target: T, prop) => {
         if (typeof prop === 'symbol') return
         if (prop === 'children') {
           // TODO: to reflect server behaviour
           // this should return an array of Components, not just IDs
-          return target.childrenIDs ? Object.keys(target.childrenIDs) : undefined
+          // return target.childrenIDs ?  : undefined
+          return Object.keys(target.childrenIDs)
+            .filter(Component.exists)
+            .map(Component.get)
         }
         return target[prop]
       }
@@ -74,8 +86,8 @@ export class Component<T extends IProps> extends Container implements IComponent
     }
   }
 
-  get props() {
-    return this._propsProxy
+  get props(): T {
+    return this._propsProxy as T
   }
 
   set props(newProps) {
@@ -92,6 +104,13 @@ export class Component<T extends IProps> extends Container implements IComponent
   }
   get _componentName() {
     return 'Component'
+  }
+
+  static exists(id): boolean {
+    return components.has(id)
+  }
+  static get(id): Component<any> | undefined {
+    return components.get(id)
   }
 
   componentDidUpdate(props) { }

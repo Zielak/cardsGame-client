@@ -3,8 +3,12 @@
  * player who owns them
  */
 import { Component, IProps } from '../component'
+import { Graphics } from 'pixi.js'
 
 export class Hand extends Component<HandProps>{
+
+  bg: Graphics
+  label: Text
 
   render() {
     // return (

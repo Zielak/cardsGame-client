@@ -6,7 +6,7 @@ import * as colyseus from 'colyseus.js'
 
 import Listeners from './listeners/index'
 
-export default class Game extends EventEmitter {
+export class Game extends EventEmitter {
 
   app: Application
   room: colyseus.Room
@@ -55,7 +55,7 @@ export default class Game extends EventEmitter {
     room.onJoin.add(() => {
       log(`${this.client.id} joined ${room.name}`)
       // Testing, just init with players
-      room.send({ action: 'GameStart' })
+      // room.send({ action: 'GameStart' })
     })
 
     room.onLeave.add(() => {

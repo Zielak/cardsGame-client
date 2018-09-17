@@ -143,8 +143,7 @@ const applyParentTransform = (element, idx, everything) => {
 class Table extends Component<TableProps> {
 
   containers = new Map<string, Component<any>>()
-  // TODO: Cards could be non-standard... modularise it some day.
-  cards = new Map<string, ClassicCard>()
+  cards = new Map<string, ClassicCard>() // TODO: BaseCard instead
   players = new Map<string, Player>()
 
   constructor() {

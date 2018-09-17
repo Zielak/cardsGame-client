@@ -12,4 +12,4 @@ export { ClassicCard } from './card/classicCard'
 
 export { Player } from './player'
 
-export { default as Game } from './game'
+export { Game } from './game'

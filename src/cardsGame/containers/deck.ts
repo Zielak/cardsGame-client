@@ -44,7 +44,7 @@ export class Deck extends Component<DeckProps> implements IContainer {
 
   redraw() {
     this.label.text = labelText(this.props.children)
-    this.children.forEach(Deck.restyleChild)
+    this.props.children.forEach(Deck.restyleChild)
   }
 
   componentDidUpdate() {
