@@ -1,7 +1,9 @@
 import { Sprite, Text } from 'pixi.js'
-import { Component, IProps } from './component'
+import { IProps } from './component'
+import { Container } from './containers/container'
+import { ClassicCard } from './card/classicCard';
 
-export class Player extends Component<PlayerProps> {
+export class Player extends Container<PlayerProps> {
 
   icon: Sprite
   label: Text
@@ -15,6 +17,8 @@ export class Player extends Component<PlayerProps> {
       stroke: '#4a1850',
       strokeThickness: 5
     })
+    this.label.x = -this.label.width / 2
+    this.label.y = -ClassicCard.height / 2 - this.label.height
 
     this.addChild(this.icon)
     this.addChild(this.label)
@@ -28,8 +32,7 @@ export class Player extends Component<PlayerProps> {
 
 interface PlayerProps extends IProps {
   name: string,
-  x: number,
-  y: number,
+  score: number,
   angle: number,
   zIndex: number,
 }

@@ -1,14 +1,15 @@
 import { log } from '../utils'
 
 export default (target, room) => {
-  room.listen('players/list/:idx', (change) => {
+
+  room.listen('players/:idx', (change) => {
     // log('player list changed: ', change)
     target.emit('players.' + change.operation, {
       idx: parseInt(change.path.idx),
       player: change.value,
     })
   })
-  room.listen('players/list/:idx/:attribute', (change) => {
+  room.listen('players/:idx/:attribute', (change) => {
     // log('player attrib changed: ', change)
     target.emit('players.update', {
       idx: parseInt(change.path.idx),

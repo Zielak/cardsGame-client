@@ -42,17 +42,12 @@ import Hand from '../containers/hand/hand'
 //   }
 // }
 
-/**
- *
- * @param {Player} player
- * @param {*} idx
- * @param {*} players
- */
-const positionPlayers = (player, idx, players) => {
+
+const positionPlayers = (player: Player, idx: number, players: Player[]) => {
   const angle = Math.PI * 2 / players.length * idx
   const point = {
-    x: Game.width / 2 + Math.sin(angle) * (Game.width * 0.4),
-    y: Game.height / 2 + Math.cos(angle) * (Game.height * 0.4),
+    x: Math.sin(angle) * (Game.width * 0.4),
+    y: Math.cos(angle) * (Game.height * 0.4),
   }
   player.rotation = -angle
   player.x = point.x
@@ -166,7 +161,7 @@ class Table extends Component<TableProps> {
 
     this.preparePlayers()
     this.prepareContainers()
-    this.addCardsListeners()
+    this.prepareCards()
   }
 
   preparePlayers() {
@@ -179,33 +174,32 @@ class Table extends Component<TableProps> {
       this.addChild(newPlayer)
       this.updatePlayers()
     })
-    /*this.on('players.remove', data => {
-      const player = getByTypeFromMap('player', this.players)
-        .find(el => el.idx === data.idx)
+    this.on('players.remove', data => {
+      const player = Component.get(data)
       if (player !== undefined) {
         this.players.delete(player.id)
         this.removeChild(player)
         this.updatePlayers()
       }
     })
-    this.on('players.replace', data => {
-      const player = getByTypeFromMap('player', this.players)
-        .find(el => el.idx === data.idx)
-      if (player !== undefined) {
-        this.removeChild(player)
-        this.addChild(new Player(data.player))
-        this.updatePlayers()
-      }
-    })
-    this.on('players.update', data => {
-      // console.log('players.update!', data)
-      const player = getByTypeFromMap('player', this.players)
-        .find(el => el.idx === data.idx)
-      if (player !== undefined) {
-        player.props[data.attribute] = data.value
-        this.updatePlayers()
-      }
-    })*/
+    // this.on('players.replace', data => {
+    //   const player = getByTypeFromMap('player', this.players)
+    //     .find(el => el.idx === data.idx)
+    //   if (player !== undefined) {
+    //     this.removeChild(player)
+    //     this.addChild(new Player(data.player))
+    //     this.updatePlayers()
+    //   }
+    // })
+    // this.on('players.update', data => {
+    //   // console.log('players.update!', data)
+    //   const player = getByTypeFromMap('player', this.players)
+    //     .find(el => el.idx === data.idx)
+    //   if (player !== undefined) {
+    //     player.props[data.attribute] = data.value
+    //     this.updatePlayers()
+    //   }
+    // })
   }
 
   prepareContainers() {
@@ -216,7 +210,7 @@ class Table extends Component<TableProps> {
 
     this.on('containers.add', data => {
       const type = data.container.type
-      let newContainer
+      let newContainer: Component<any>
       switch (type) {
         case 'deck': newContainer = create<Deck>(Deck, data.container); break
         case 'pile': newContainer = create<Pile>(Pile, data.container); break
@@ -225,7 +219,7 @@ class Table extends Component<TableProps> {
 
       this.containers.set(newContainer.id, newContainer)
 
-      const parent = getByIdFromMap(newContainer.parentId, this.containers) || this
+      const parent = Component.get(newContainer.props.parentId) || this
       parent.addChild(newContainer)
     })
     // this.on('containers.remove', data => {
@@ -252,7 +246,7 @@ class Table extends Component<TableProps> {
     // })
   }
 
-  addCardsListeners() {
+  prepareCards() {
     this.on('cards.add', (data) => {
       // idx: elementID, card
       const card = new ClassicCard(data.card)
@@ -279,7 +273,7 @@ class Table extends Component<TableProps> {
   }
 
   updatePlayers() {
-    this.players.forEach(positionPlayers)
+    Array.from(this.players.values()).forEach(positionPlayers)
   }
 
 }

@@ -7,6 +7,7 @@ export interface IProps {
   order?: number,
   childrenIDs?: { [key: string]: string },
   children?: Component<any>[],
+  parentId?: string,
   name?: string,
   type?: string
 }

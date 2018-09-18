@@ -37,6 +37,8 @@ export class Deck extends Container<DeckProps> implements IContainer {
       stroke: '#4a1850',
       strokeThickness: 5,
     })
+    this.label.x = -this.label.width / 2
+    this.label.y = ClassicCard.height / 2
 
     this.addChild(this.bg)
     this.addChild(this.label)

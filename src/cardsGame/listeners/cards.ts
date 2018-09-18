@@ -2,7 +2,7 @@ import { log } from '../utils'
 
 export default (target, room) => {
   room.listen('cards/:idx', (change) => {
-    log('cards => ', change.operation)
+    log(`cards => ${change.operation}`)
     target.emit('cards.' + change.operation, {
       idx: change.path.idx,
       card: change.value,
