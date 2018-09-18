@@ -8,8 +8,7 @@ import { Deck } from '../containers/deck'
 import { Pile } from '../containers/pile'
 import { Hand } from '../containers/hand'
 import { Component, IProps } from '../component'
-import { getByTypeFromMap, getByIdFromMap } from '../utils'
-import { IContainer } from '../containers/container'
+import { getByIdFromMap } from '../utils'
 
 /**
  * Decides where each part of the game should be placed,

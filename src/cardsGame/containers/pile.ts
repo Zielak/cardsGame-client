@@ -4,12 +4,13 @@
  */
 import { Graphics, Text } from 'pixi.js'
 import { ClassicCard } from '../card/classicCard'
-import { Component, IProps } from '../component'
+import { IProps } from '../component'
 import { procNumberFromString } from '../utils'
+import { Container } from './container';
 
 const labelText = (children) => `PILE of ${children.length} cards`
 
-export class Pile extends Component<PileProps> {
+export class Pile extends Container<PileProps> {
 
   bg: Graphics
   label: Text

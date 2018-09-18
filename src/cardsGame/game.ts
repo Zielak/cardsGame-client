@@ -1,10 +1,11 @@
-import { Application, Text, ticker } from 'pixi.js'
+import { Application, Text, interaction } from 'pixi.js'
 import Table from './table/table'
 import { EventEmitter } from 'eventemitter3'
 import { log } from './utils'
 import * as colyseus from 'colyseus.js'
 
 import Listeners from './listeners/index'
+import { Component } from './component'
 
 export class Game extends EventEmitter {
 
@@ -44,6 +45,18 @@ export class Game extends EventEmitter {
     this.host = null
 
     this.table = new Table()
+    this.table.on('click', (event: interaction.InteractionEvent) => {
+      console.info('Table got clicked', event.target)
+
+      // TODO: factory/type for playerEvent - must be the same as on server!
+      const playerEvent = {
+        // invoker: string       // clientID is already in onMessage method
+        eventType: event.type,
+        eventTarget: (event.target as Component<any>).id  // ID of target element
+        // data?: any            // additional/optional data
+      }
+      this.room.send(playerEvent)
+    })
     this.app.stage.addChild(this.table)
 
     const testText = new Text('Testing!', {

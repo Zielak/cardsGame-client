@@ -1,14 +1,14 @@
 /**
  * Container of neatly packed cards in one column.
  */
-import { Text, Graphics, DisplayObject } from 'pixi.js'
+import { Text, Graphics } from 'pixi.js'
 import { ClassicCard } from '../card/classicCard'
 import { Component, IProps } from '../component'
-import { IContainer } from './container'
+import { IContainer, Container } from './container'
 
 const labelText = (children) => `DECK of ${children.length} cards`
 
-export class Deck extends Component<DeckProps> implements IContainer {
+export class Deck extends Container<DeckProps> implements IContainer {
 
   bg: Graphics
   label: Text

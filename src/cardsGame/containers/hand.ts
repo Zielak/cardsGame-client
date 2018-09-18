@@ -2,10 +2,11 @@
  * Container of cards that are visible only to the
  * player who owns them
  */
-import { Component, IProps } from '../component'
+import { IProps } from '../component'
 import { Graphics } from 'pixi.js'
+import { Container } from './container'
 
-export class Hand extends Component<HandProps>{
+export class Hand extends Container<HandProps>{
 
   bg: Graphics
   label: Text

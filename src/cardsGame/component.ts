@@ -25,6 +25,15 @@ export class Component<T extends IProps> extends Container implements IComponent
 
   isContainer: boolean = false
 
+  get interactive() {
+    if (!this.parent) {
+      return true
+    } else if ((this.parent as Component<any>).isContainer) {
+      return false
+    }
+    return true
+  }
+
   /**
    * Creates an instance of Component.
    * @param {any} props
@@ -32,8 +41,6 @@ export class Component<T extends IProps> extends Container implements IComponent
    */
   constructor(props: T) {
     super()
-
-    this.interactive = true
 
     components.set(props.id, this)
     // TODO: maybe clone and loose reference. But it's T...
