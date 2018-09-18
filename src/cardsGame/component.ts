@@ -23,6 +23,8 @@ export class Component<T extends IProps> extends Container implements IComponent
 
   propTypes: { [key: string]: any }
 
+  isContainer: boolean = false
+
   /**
    * Creates an instance of Component.
    * @param {any} props
@@ -30,6 +32,9 @@ export class Component<T extends IProps> extends Container implements IComponent
    */
   constructor(props: T) {
     super()
+
+    this.interactive = true
+
     components.set(props.id, this)
     // TODO: maybe clone and loose reference. But it's T...
     this._props = {

@@ -1,4 +1,4 @@
-import { Application, Text } from 'pixi.js'
+import { Application, Text, ticker } from 'pixi.js'
 import Table from './table/table'
 import { EventEmitter } from 'eventemitter3'
 import { log } from './utils'
@@ -30,6 +30,14 @@ export class Game extends EventEmitter {
     // The application will create a canvas element for you that you
     // can then insert into the DOM.
     document.body.appendChild(this.app.view)
+
+    this.app.ticker.stop()
+    let lastTime = performance.now()
+    setInterval(() => {
+      const now = performance.now()
+      this.app.ticker.update(now - lastTime)
+      lastTime = performance.now()
+    }, 1000 / 12)
 
     this.room = room
     this.client = client
