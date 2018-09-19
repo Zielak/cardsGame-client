@@ -257,10 +257,18 @@ export class Table extends Component<TableProps> {
     this.on('cards.attribute.update', data => {
       // idx: elementID, attribute, value
       // FIXME: something smells here.
-      const card = getByIdFromMap(data.idx, this.cards)
+      const card = getByIdFromMap(data.id, this.cards)
       if (card) {
         card.props[data.attribute] = data.value
       }
+    })
+    this.on('cards.parentChange', (data) => {
+      console.log('cards.parentChange', data)
+      const element = Component.get(data.id)
+      const newParent = Component.get(data.parentId)
+      // TODO: animate from-to
+
+      newParent.addChild(element)
     })
   }
 

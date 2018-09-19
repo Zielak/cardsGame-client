@@ -59,7 +59,7 @@ export class Game extends EventEmitter {
     })
     this.app.stage.addChild(this.table)
 
-    const testText = new Text('Testing!', {
+    const testText = new Text('Open me in different browsers!', {
       fill: 0xffffff,
       fontSize: 12
     })

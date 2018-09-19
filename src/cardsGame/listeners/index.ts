@@ -27,5 +27,8 @@ export type StateChangeEvent = {
 }
 
 export const parentChanges = (change: StateChangeEvent) => {
-
+  return (
+    change.operation === OperationType.REPLACE &&
+    change.path.attribute === 'parentId'
+  )
 }

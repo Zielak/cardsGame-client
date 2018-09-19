@@ -29,8 +29,12 @@ export class Component<T extends IProps> extends Container implements IComponent
   get interactive() {
     if (!this.parent) {
       return true
-    } else if ((this.parent as Component<any>).isContainer) {
-      return false
+    }
+    const parentComponent = this.parent as Component<any>
+    if (parentComponent.isContainer) {
+      // TODO: group that condition into one place
+      if (parentComponent.type === 'deck' || parentComponent.type === 'pile')
+        return false
     }
     return true
   }
@@ -44,7 +48,6 @@ export class Component<T extends IProps> extends Container implements IComponent
     super()
 
     components.set(props.id, this)
-    // TODO: maybe clone and loose reference. But it's T...
     this._props = {
       id: props.id
     }
@@ -75,9 +78,6 @@ export class Component<T extends IProps> extends Container implements IComponent
       get: (target: T, prop) => {
         if (typeof prop === 'symbol') return
         if (prop === 'children') {
-          // TODO: to reflect server behaviour
-          // this should return an array of Components, not just IDs
-          // return target.childrenIDs ?  : undefined
           return Object.keys(target.childrenIDs)
             .filter(Component.exists)
             .map(Component.get)
