@@ -134,7 +134,7 @@ const applyParentTransform = (element, idx, everything) => {
 
 // const playerIdx = (idx) => (player) => player.idx === idx
 
-class Table extends Component<TableProps> {
+export class Table extends Component<TableProps> {
 
   containers = new Map<string, Component<any>>()
   cards = new Map<string, ClassicCard>() // TODO: BaseCard instead
@@ -279,5 +279,3 @@ class Table extends Component<TableProps> {
 }
 
 interface TableProps extends IProps { }
-
-export default Table

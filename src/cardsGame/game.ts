@@ -1,10 +1,10 @@
 import { Application, Text, interaction } from 'pixi.js'
-import Table from './table/table'
+import { Table } from './table/table'
 import { EventEmitter } from 'eventemitter3'
 import { log } from './utils'
 import * as colyseus from 'colyseus.js'
 
-import Listeners from './listeners/index'
+import { Listeners } from './listeners/index'
 import { Component } from './component'
 
 export class Game extends EventEmitter {
@@ -30,7 +30,7 @@ export class Game extends EventEmitter {
 
     // The application will create a canvas element for you that you
     // can then insert into the DOM.
-    document.body.appendChild(this.app.view)
+    window['gameContainer'].appendChild(this.app.view)
 
     this.app.ticker.stop()
     let lastTime = performance.now()
