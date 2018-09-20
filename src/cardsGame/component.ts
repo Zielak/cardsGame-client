@@ -126,16 +126,6 @@ export class Component<T extends IProps> extends Container implements IComponent
     this._updatedProps.add(updatedProp)
   }
 
-  // addChild<U extends DisplayObject>(child: U, ...additionalChildren: DisplayObject[]): U{
-  //   super.addChild(child, ...additionalChildren)
-
-  //   // My custom stuff
-  //   if()
-
-  //   // Back to imitating PIXI behaviour
-  //   return child
-  // }
-
   /**
    * Overrides PIXI's property to set its `interactive` dynamically
    * depending on type of parent container (if any)

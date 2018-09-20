@@ -31,7 +31,7 @@ export class Hand extends Container<HandProps> implements IContainer {
     const funcX = (i, a = 0, b = 1, c = 0) => a * Math.cos(2 * Math.PI * i / b + c)
     const funcR = (i, a) => i * a - i * a / 2
 
-    const offsetIdx = idx / (max - 1)
+    const offsetIdx = idx / Math.max(1, max - 1)
     child.x = funcX(offsetIdx, 1, 2) * width
     child.y = -funcY(offsetIdx, max, max) * height
     // child.rotation = -deg2rad(funcR(idx - max / 2, 10))

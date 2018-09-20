@@ -1,8 +1,9 @@
 import { log } from '../utils'
+import { StateChangeEvent } from '.';
 
 export default (target, room) => {
 
-  room.listen('containers/:idx', (change) => {
+  room.listen('containers/:idx', (change: StateChangeEvent) => {
     log('container changed: ', change)
     target.emit('containers.' + change.operation, {
       idx: parseInt(change.path.idx),
@@ -10,8 +11,8 @@ export default (target, room) => {
     })
   })
 
-  room.listen('containers/:idx/:attribute', (change) => {
-    // log(`container ${change.path.id} changed attribute ${change.path.attribute} to ${change.value} (${change.operation})`)
+  room.listen('containers/:idx/:attribute', (change: StateChangeEvent) => {
+    log(`container ${change.path.idx.substr(0, 5)} ${change.operation}ed attribute ${change.path.attribute} to ${change.value}`)
     target.emit('containers.update', {
       idx: parseInt(change.path.idx),
       attribute: change.path.attribute,
@@ -19,7 +20,7 @@ export default (target, room) => {
     })
   })
 
-  room.listen('containers/:idx/children/:childIdx', (change) => {
+  room.listen('containers/:idx/childrenIDs/:childIdx', (change: StateChangeEvent) => {
     // log(`container ${change.path.idx} child change ${change.path.childIdx} (${change.operation})`)
     target.emit(`containers.${change.operation}Child`, {
       idx: parseInt(change.path.idx),

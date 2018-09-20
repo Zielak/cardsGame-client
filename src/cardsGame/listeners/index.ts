@@ -21,6 +21,7 @@ export type StateChangeEvent = {
   path: {
     attribute?: string
     idx?: string
+    childIdx?: string
   }
   rawPath: StatePath
   value: any
