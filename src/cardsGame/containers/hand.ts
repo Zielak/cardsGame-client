@@ -2,40 +2,41 @@
  * Container of cards that are visible only to the
  * player who owns them
  */
-import { IProps } from '../component'
+import { IProps, Component } from '../component'
 import { Graphics } from 'pixi.js'
-import { Container } from './container'
+import { Container, IContainer } from './container'
+import { deg2rad } from '../utils';
 
-export class Hand extends Container<HandProps>{
+export class Hand extends Container<HandProps> implements IContainer {
 
   bg: Graphics
   label: Text
 
-  render() {
-    // return (
-    //   <div className="Hand" style={this.parseStyle()}>
-
-    //   </div>
-    // )
-  }
-
-  parseStyle() {
-    return {
-      left: this.props.x + '%',
-      top: this.props.y + '%',
-      '--angle': this.props.angle + 'deg',
+  componentDidUpdate(props: Set<string>) {
+    if (props.has('childrenIDs')) {
+      this.redrawChildren()
     }
   }
 
-  static restyleChild = (child, idx, length) => {
-    const half = length * 0.5
-    const x = -half * 1.6 + idx * 1.6
-    return {
-      x: x,
-      y: -x * (x / 14),
-      angle: -half * 8 + (idx + 0.5) * 8,
-      zIndex: idx + 1,
-    }
+  redrawChildren() {
+    this.props.children.forEach(Hand.restyleChild)
+  }
+
+  static restyleChild(child: Component<any>, idx: number, arr) {
+    const max = arr.length
+    const width = 100
+    const height = 20
+
+    const funcY = (i, a = 0, b = 0, c = 0) => (-a * (i * i)) + (i * b) + c
+    const funcX = (i, a = 0, b = 1, c = 0) => a * Math.cos(2 * Math.PI * i / b + c)
+    const funcR = (i, a) => i * a - i * a / 2
+
+    const offsetIdx = idx / (max - 1)
+    child.x = funcX(offsetIdx, 1, 2) * width
+    child.y = -funcY(offsetIdx, max, max) * height
+    // child.rotation = -deg2rad(funcR(idx - max / 2, 10))
+    child.rotation = deg2rad(funcX(offsetIdx, 1, 2, 0) * 45)
+    // zIndex: idx + 1,
   }
 }
 

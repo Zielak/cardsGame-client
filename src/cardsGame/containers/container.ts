@@ -1,8 +1,7 @@
 import { IComponent, Component, IProps } from '../component'
 
 export interface IContainer extends IComponent {
-  draw: () => void
-  redraw: () => void
+  redrawChildren: () => void
   // restyleChild?? - don't type that, it's static
 }
 

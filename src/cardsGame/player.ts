@@ -24,8 +24,10 @@ export class Player extends Container<PlayerProps> {
     this.addChild(this.label)
   }
 
-  componentDidUpdate(props) {
-    this.label.text = props.name
+  componentDidUpdate(props: Set<string>) {
+    if (props.has('name')) {
+      this.label.text = this.props.name
+    }
   }
 
 }

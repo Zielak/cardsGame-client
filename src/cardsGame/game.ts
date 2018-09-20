@@ -38,7 +38,7 @@ export class Game extends EventEmitter {
       const now = performance.now()
       this.app.ticker.update(now - lastTime)
       lastTime = performance.now()
-    }, 1000 / 12)
+    }, 1000 / 24)
 
     this.room = room
     this.client = client

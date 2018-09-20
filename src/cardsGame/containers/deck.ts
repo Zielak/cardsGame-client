@@ -13,14 +13,7 @@ export class Deck extends Container<DeckProps> implements IContainer {
   bg: Graphics
   label: Text
 
-  constructor(props: DeckProps) {
-    super(props)
-    this.draw()
-    // FIXME: don't setTimeout!
-    setTimeout(() => this.redraw(), 0)
-  }
-
-  draw() {
+  setup() {
     this.bg = new Graphics()
 
     this.bg.beginFill(0x491008, 0.1)
@@ -44,16 +37,19 @@ export class Deck extends Container<DeckProps> implements IContainer {
     this.addChild(this.label)
   }
 
-  redraw() {
-    this.label.text = labelText(this.props.children)
+  componentDidUpdate(props: Set<string>) {
+    if (props.has('childrenIDs')) {
+      this.label.text = labelText(this.props.children)
+      this.redrawChildren()
+    }
+  }
+
+  redrawChildren() {
     this.props.children.forEach(Deck.restyleChild)
   }
 
-  componentDidUpdate() {
-    this.redraw()
-  }
-
   static restyleChild(child: Component<any>, idx/*, length*/) {
+    // TODO: maybe animate it
     child.x = idx * .3
     child.y = -idx * .3
     child.rotation = 0

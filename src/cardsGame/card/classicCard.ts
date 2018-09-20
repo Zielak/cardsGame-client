@@ -1,33 +1,51 @@
 import { Graphics, Text, TextStyle } from 'pixi.js'
-import { Component, IProps } from '../component'
+import { Component, IProps, IComponent } from '../component'
 import { cm2px } from '../utils'
 
-export class ClassicCard extends Component<ClassicCardProps> {
+export class ClassicCard extends Component<ClassicCardProps> implements IComponent {
 
-  bg: Graphics
+  paper: Graphics
+  back: Graphics
   rank: Text
   suit: Text
-
-  constructor(props: ClassicCardProps) {
-    super(props)
-    this.draw()
-  }
 
   get _componentName() {
     return 'ClassicCard'
   }
 
-  draw() {
-    this.bg = new Graphics()
+  setup() {
+    this.paper = new Graphics()
+      .beginFill(0xFFFFFF, 1)
+      .lineStyle(1, 0xb7b7b7)
+      .drawRoundedRect(
+        -ClassicCard.width / 2,
+        -ClassicCard.height / 2,
+        ClassicCard.width,
+        ClassicCard.height,
+        8
+      )
 
-    this.bg.beginFill(0xFFFFFF, 1)
-    this.bg.drawRoundedRect(
-      -ClassicCard.width / 2,
-      -ClassicCard.height / 2,
-      ClassicCard.width,
-      ClassicCard.height,
-      8
-    )
+    // Back side graphics padding from paper's edge
+    const BACK_PAD = 14
+    const BACK_COLOR = 0xb0342f
+
+    this.back = new Graphics()
+      .beginFill(BACK_COLOR, 1)
+      .drawRect(
+        -ClassicCard.width / 2 + BACK_PAD,
+        -ClassicCard.height / 2 + BACK_PAD,
+        ClassicCard.width - BACK_PAD * 2,
+        ClassicCard.height - BACK_PAD * 2
+      )
+      .endFill()
+      .lineStyle(1, BACK_COLOR)
+      .drawRect(
+        -ClassicCard.width / 2 + BACK_PAD - 2,
+        -ClassicCard.height / 2 + BACK_PAD - 2,
+        ClassicCard.width - BACK_PAD * 2 + 4,
+        ClassicCard.height - BACK_PAD * 2 + 4,
+      )
+
     this.rank = new Text(
       this.getRankText(this.props.rank),
       this.getRankStyle(this.props.rank)
@@ -42,19 +60,27 @@ export class ClassicCard extends Component<ClassicCardProps> {
     this.suit.x = -ClassicCard.width / 2 + 5
     this.suit.y = -ClassicCard.height / 2 + 5 + this.rank.height
 
-    this.addChild(this.bg)
+    this.addChild(this.paper)
     this.addChild(this.rank)
     this.addChild(this.suit)
+    this.addChild(this.back)
   }
 
-  redraw() {
-    this.rank.text = this.getRankText(this.props.rank)
-    this.rank.style = this.getRankStyle(this.props.rank)
+  componentDidUpdate(props: Set<string>) {
+    if (props.has('rank')) {
+      this.rank.text = this.getRankText(this.props.rank)
+      this.rank.style = this.getRankStyle(this.props.rank)
+    }
 
-    this.suit.text = this.getSuitText(this.props.suit)
-    this.suit.style = this.getSuitStyle(this.props.suit)
+    if (props.has('suit')) {
+      this.suit.text = this.getSuitText(this.props.suit)
+      this.suit.style = this.getSuitStyle(this.props.suit)
+    }
 
-    this.rank.visible = this.suit.visible = this.props.state.faceUp
+    if (props.has('faceUp')) {
+      this.rank.visible = this.suit.visible = this.props.faceUp
+      this.back.visible = !this.props.faceUp
+    }
   }
 
   getRankText(rank: string): string {
@@ -111,11 +137,7 @@ interface ClassicCardProps extends IProps {
   suit: string,
   rank: string,
 
-  state: {
-    faceUp: boolean,
-    rotated: number,
-    marked: boolean,
-  },
-
-  interactionHandler: () => void,
+  faceUp: boolean,
+  rotated: number,
+  marked: boolean,
 }

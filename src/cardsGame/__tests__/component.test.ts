@@ -41,23 +41,56 @@ test('adds new prop via proxy', () => {
   expect(comp.props.name).toBe('test1')
 })
 
-test('schedules update after props change', () => new Promise(resolve => {
-  const comp = newComponent({ name: 'test1' })
+test('update comes right after construction', () =>
+  new Promise(resolve => {
+    const comp = newComponent({
+      name: 'test1'
+    })
 
-  comp.componentDidUpdate = props => {
-    expect(props.test2).toBe(2)
-    resolve()
-  }
+    comp.componentDidUpdate = (props: Set<string>) => {
+      expect(typeof props).toBe('object')
+      expect(props instanceof Set).toBeTruthy()
 
-  comp.props.test2 = 2
-}))
+      expect(props.has('type')).toBeFalsy()
+      expect(props.has('name')).toBeTruthy()
+      expect(props.size).toBe(2)
+      resolve()
+    }
+  })
+)
 
-test('does not schedule update if prop got the same value', () => new Promise((resolve, reject) => {
-  const comp = newComponent({ name: 'test1' })
+test('schedules update "long" after construction', () =>
+  new Promise((resolve) => {
+    const comp = newComponent({
+      name: 'test1'
+    })
 
-  comp.componentDidUpdate = reject
-  comp.props.name = 'test1'
-  setTimeout(() => {
-    resolve()
-  }, 5)
-}))
+    // Run assertions after initial update
+    comp.componentDidUpdate = (props) => {
+      comp.componentDidUpdate = resolve
+      setTimeout(() => {
+        comp.props.name = 'test2'
+      }, 10)
+    }
+  })
+)
+
+test(`doesn't schedule update for same value`, () =>
+  new Promise((resolve, reject) => {
+    const comp = newComponent({
+      name: 'test1',
+      type: 'changeMe'
+    })
+
+    // Run assertions after initial update
+    comp.componentDidUpdate = (props) => {
+      comp.componentDidUpdate = reject
+      comp.props.name = 'test1'
+      comp.props.type = 'changing'
+      setTimeout(() => {
+        resolve()
+      }, 0)
+    }
+  })
+)
+
