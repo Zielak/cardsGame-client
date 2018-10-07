@@ -1,4 +1,4 @@
-import { log } from '../utils'
+import { log } from '../log'
 
 export default (target, room) => {
 
@@ -18,15 +18,15 @@ export default (target, room) => {
     })
   })
   room.listen('players/reversed', (change) => {
-    log('player reversed changed: ', change)
+    log.verbose('player reversed changed: ', change)
     // target.emit('players.reversed', {})
   })
   room.listen('players/currentPlayerIdx', (change) => {
-    log('player currentPlayerIdx changed: ', change)
+    log.verbose('player currentPlayerIdx changed: ', change)
     // target.emit('players.currentPlayerIdx', {})
   })
   room.listen('players/currentPlayer', (change) => {
-    log('player currentPlayer changed: ', change)
+    log.verbose('player currentPlayer changed: ', change)
     // target.emit('players.currentPlayer', {})
   })
 }

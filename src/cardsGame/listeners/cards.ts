@@ -1,10 +1,10 @@
-import { log } from '../utils'
+import { log } from '../log'
 import { StateChangeEvent, parentChanges } from '.'
 import { Component } from '../component'
 
 export default (target: Component<any>, room) => {
   room.listen('cards/:idx', (change: StateChangeEvent) => {
-    log(`cards => ${change.operation}`)
+    log.verbose(`cards => ${change.operation}`)
     target.emit('cards.' + change.operation, {
       idx: change.path.idx,
       card: change.value,

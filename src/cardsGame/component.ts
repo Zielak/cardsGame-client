@@ -1,6 +1,10 @@
-import { Container, DisplayObject } from 'pixi.js'
+import { Container } from 'pixi.js'
+import { CContainer } from './containers/container'
+import { log } from './log'
 
 const components = new Map<string, Component<any>>()
+
+const updateQueue = new Set<Component<any>>()
 
 export interface IProps {
   id: string,
@@ -9,7 +13,9 @@ export interface IProps {
   children?: Component<any>[],
   parentId?: string,
   name?: string,
-  type?: string
+  type?: string,
+  x?: number,
+  y?: number
 }
 
 export interface IComponent {
@@ -41,12 +47,11 @@ export class Component<T extends IProps> extends Container implements IComponent
     this._propsProxy = new Proxy(this._props, {
 
       set: (target, prop: string, value) => {
-        // if (typeof prop === 'symbol') {
-        //   return false
-        // }
+        // Check if the value is the same
         if (target[prop] === value) {
           return true
         }
+        // Set it
         target[prop] = value
 
         this._scheduleUpdate(prop)
@@ -81,6 +86,11 @@ export class Component<T extends IProps> extends Container implements IComponent
     this.on('removed', () => {
       components.delete(this._props.id)
     })
+    this.on('added', (newParent: CContainer<any>) => {
+      if (!newParent.props) return
+      this.logVerbose('emit childadded on', newParent.props.type, this)
+      newParent.emit('childadded')
+    })
   }
 
   /**
@@ -94,10 +104,34 @@ export class Component<T extends IProps> extends Container implements IComponent
    * Called every time any prop gets updated with new value.
    * Update your graphical elements accordingly.
    */
-  componentDidUpdate(props: Set<string>) { }
+  componentDidUpdate(props: Set<string>) {
+    this.logWarn(`componentDidUpdate NOT implemented: ${this.props.type}`)
+  }
 
+  logError(...args) {
+    log.error(`[${this.props.type}] `, ...args)
+  }
+  logWarn(...args) {
+    log.warn(`[${this.props.type}] `, ...args)
+  }
+  logInfo(...args) {
+    log.info(`[${this.props.type}] `, ...args)
+  }
+  log(...args) {
+    log.notice(`[${this.props.type}] `, ...args)
+  }
+  logVerbose(...args) {
+    log.verbose(`[${this.props.type}] `, ...args)
+  }
+
+  /**
+   *
+   * @param props
+   */
   _preComponentDidUpdate(props: Set<string>) {
+    const parentComponent = this.parent as Component<any>
 
+    // Parent got updated
     if (props.has('parentId')) {
       // This element needs to switch parents in graphical interface
       let parent = Component.get(this.props.parentId)
@@ -109,18 +143,31 @@ export class Component<T extends IProps> extends Container implements IComponent
       }
     }
 
+    // X and Y positions
+    if (!parentComponent || parentComponent && !parentComponent.isContainer) {
+      if (props.has('x')) {
+        this.x = this.props.x
+      }
+      if (props.has('y')) {
+        this.y = this.props.y
+      }
+    }
+
+
+    this.logVerbose(`_preComponentDidUpdate ${this.props.type} with: [${Array.from(props.values()).join(', ')}]`)
     this.componentDidUpdate(props)
   }
 
   private _scheduleUpdate(updatedProp: string) {
     if (!this._updateScheduled) {
       this._updateScheduled = true
-      // console.log('update scheduled')
+      this.logVerbose('update scheduled')
+      updateQueue.add(this)
       setTimeout(() => {
-        // console.log(` - componentDidUpdate, with ${this._updatedProps.size} props`)
         this._preComponentDidUpdate.call(this, this._updatedProps)
         this._updateScheduled = false
         this._updatedProps.clear()
+        updateQueue.clear()
       }, 0)
     }
     this._updatedProps.add(updatedProp)

@@ -3,16 +3,45 @@
  * player who owns them
  */
 import { IProps, Component } from '../component'
-import { Graphics } from 'pixi.js'
-import { Container, IContainer } from './container'
+import { Graphics, Text } from 'pixi.js'
+import { CContainer, IContainer } from './container'
 import { deg2rad } from '../utils';
+import { ClassicCard } from '../card/classicCard';
 
-export class Hand extends Container<HandProps> implements IContainer {
+const labelText = (children) => `Hand of ${children.length} cards`
+
+export class Hand extends CContainer<HandProps> implements IContainer {
 
   bg: Graphics
   label: Text
 
+  setup() {
+    const PLUS_SIZE = 20
+    this.bg = new Graphics()
+
+    this.bg.beginFill(0xff0099, 0.1)
+    this.bg.lineStyle(3, 0xff0099, 1)
+    this.bg.drawRoundedRect(
+      -ClassicCard.width / 2 - PLUS_SIZE * 2,
+      -ClassicCard.height / 2 - PLUS_SIZE,
+      ClassicCard.width + PLUS_SIZE * 4,
+      ClassicCard.height + PLUS_SIZE * 2,
+      32
+    )
+    this.label = new Text(labelText(this.props.children), {
+      fill: ['#ffffff', '#ff66CC'],
+      stroke: '#4a1850',
+      strokeThickness: 4,
+    })
+    this.label.x = -this.label.width / 2
+    this.label.y = ClassicCard.height / 2
+
+    this.addChild(this.bg)
+    this.addChild(this.label)
+  }
+
   componentDidUpdate(props: Set<string>) {
+    this.log(`componentDidUpdate ${this.props.type}`)
     if (props.has('childrenIDs')) {
       this.redrawChildren()
     }

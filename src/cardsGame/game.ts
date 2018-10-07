@@ -1,11 +1,11 @@
 import { Application, Text, interaction } from 'pixi.js'
 import { Table } from './table/table'
 import { EventEmitter } from 'eventemitter3'
-import { log } from './utils'
 import * as colyseus from 'colyseus.js'
 
 import { Listeners } from './listeners/index'
 import { Component } from './component'
+import { log } from './log'
 
 export class Game extends EventEmitter {
 
@@ -46,7 +46,7 @@ export class Game extends EventEmitter {
 
     this.table = new Table()
     this.table.on('click', (event: interaction.InteractionEvent) => {
-      console.info('Table got clicked', event.target)
+      log.info('Table got clicked', event.target)
 
       // TODO: factory/type for playerEvent - must be the same as on server!
       const playerEvent = {
@@ -74,7 +74,7 @@ export class Game extends EventEmitter {
     const room = this.room
 
     room.onJoin.add(() => {
-      log(`${this.client.id} joined ${room.name}`)
+      log.notice(`${this.client.id} joined ${room.name}`)
       // Testing, just init with players
       // room.send({ action: 'GameStart' })
     })
@@ -96,7 +96,7 @@ export class Game extends EventEmitter {
     // =======================
 
     room.onStateChange.addOnce(state => {
-      log('initial lobby data:', state)
+      log.verbose('initial lobby data:', state)
       /*state.clients.forEach((el, idx) => this.store.dispatch({
         type: 'clients.add',
         data: {
@@ -116,7 +116,7 @@ export class Game extends EventEmitter {
 
     // listen to patches coming from the server
     room.listen('clients/:number', (change) => {
-      log('new client change arrived: ', change)
+      log.verbose('new client change arrived: ', change)
       /*this.store.dispatch({
         type: 'clients.' + change.operation,
         data: {
@@ -127,7 +127,7 @@ export class Game extends EventEmitter {
     })
 
     room.listen('host', (change) => {
-      log('host changed: ', change)
+      log.verbose('host changed: ', change)
       this.host = change.value
     })
 
@@ -136,7 +136,7 @@ export class Game extends EventEmitter {
     Listeners.cardsListener(this.table, room)
 
     room.listen('GameStart', function () {
-      log('GameStart!? ', arguments)
+      log.notice('GameStart!? ', arguments)
     })
   }
 

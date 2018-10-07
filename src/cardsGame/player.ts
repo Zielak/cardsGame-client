@@ -1,9 +1,9 @@
 import { Sprite, Text } from 'pixi.js'
 import { IProps } from './component'
-import { Container } from './containers/container'
+import { CContainer } from './containers/container'
 import { ClassicCard } from './card/classicCard';
 
-export class Player extends Container<PlayerProps> {
+export class Player extends CContainer<PlayerProps> {
 
   icon: Sprite
   label: Text

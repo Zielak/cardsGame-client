@@ -8,6 +8,7 @@ export class ClassicCard extends Component<ClassicCardProps> implements ICompone
   back: Graphics
   rank: Text
   suit: Text
+  _order: Text
 
   get _componentName() {
     return 'ClassicCard'
@@ -60,13 +61,24 @@ export class ClassicCard extends Component<ClassicCardProps> implements ICompone
     this.suit.x = -ClassicCard.width / 2 + 5
     this.suit.y = -ClassicCard.height / 2 + 5 + this.rank.height
 
+    this._order = new Text(
+      `(${this.props.order})`,
+      new TextStyle({
+        fill: '#000000',
+        fontSize: 12
+      })
+    )
+    this._order.x = -this._order.width / 2
+
     this.addChild(this.paper)
     this.addChild(this.rank)
     this.addChild(this.suit)
     this.addChild(this.back)
+    this.addChild(this._order)
   }
 
   componentDidUpdate(props: Set<string>) {
+    this.logVerbose(`componentDidUpdate ${this.props.type}`)
     if (props.has('rank')) {
       this.rank.text = this.getRankText(this.props.rank)
       this.rank.style = this.getRankStyle(this.props.rank)

@@ -8,11 +8,11 @@ import {
   ClassicCard
 } from '..'
 import { Deck } from '../containers/deck'
-import { Pile } from '../containers/pile'
 import { Hand } from '../containers/hand'
+import { Pile } from '../containers/pile'
+import { Row } from '../containers/row'
+import { Spread } from '../containers/spread'
 import { Component, IProps } from '../component'
-import { getByIdFromMap } from '../utils'
-
 
 const positionPlayers = (player: Player, idx: number, players: Player[]) => {
   const angle = Math.PI * 2 / players.length * idx
@@ -101,8 +101,11 @@ export class Table extends Component<TableProps> {
       let newContainer: Component<any>
       switch (type) {
         case 'deck': newContainer = create<Deck>(Deck, data.container); break
-        case 'pile': newContainer = create<Pile>(Pile, data.container); break
         case 'hand': newContainer = create<Hand>(Hand, data.container); break
+        case 'pile': newContainer = create<Pile>(Pile, data.container); break
+        case 'row': newContainer = create<Row>(Row, data.container); break
+        case 'spread': newContainer = create<Spread>(Spread, data.container); break
+        default: return
       }
 
       this.containers.set(newContainer.id, newContainer)

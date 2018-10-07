@@ -10,6 +10,6 @@ const host = window.document.location.host.replace(/:.*/, '')
 const client = new Client('ws://' + host + (location.port ? ':' + 2657 : ''))
 
 client.onOpen.add(() => {
-  const gameRoom = client.join('SimpleTest')
+  const gameRoom = client.join('ContainersTest')
   window['game'] = new Game(gameRoom, client)
 })

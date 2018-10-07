@@ -4,25 +4,28 @@
 import { Text, Graphics } from 'pixi.js'
 import { ClassicCard } from '../card/classicCard'
 import { Component, IProps } from '../component'
-import { IContainer, Container } from './container'
+import { IContainer, CContainer } from './container'
+import { keysList, trim, cm2px, limit } from '../utils'
+import { log } from '../log';
 
 const labelText = (children) => `DECK of ${children.length} cards`
 
-export class Deck extends Container<DeckProps> implements IContainer {
+export class Deck extends CContainer<DeckProps> implements IContainer {
 
   bg: Graphics
   label: Text
 
   setup() {
+    const PLUS_SIZE = 10
     this.bg = new Graphics()
 
     this.bg.beginFill(0x491008, 0.1)
     this.bg.lineStyle(3, 0xff754a, 1)
     this.bg.drawRoundedRect(
-      -ClassicCard.width / 2,
-      -ClassicCard.height / 2,
-      ClassicCard.width,
-      ClassicCard.height,
+      -ClassicCard.width / 2 - PLUS_SIZE,
+      -ClassicCard.height / 2 - PLUS_SIZE,
+      ClassicCard.width + PLUS_SIZE * 2,
+      ClassicCard.height + PLUS_SIZE * 2,
       8
     )
     this.label = new Text(labelText(this.props.children), {
@@ -38,6 +41,7 @@ export class Deck extends Container<DeckProps> implements IContainer {
   }
 
   componentDidUpdate(props: Set<string>) {
+    this.log(`componentDidUpdate ${this.props.type}, children: [${keysList( this.props.childrenIDs).map(el => trim(el))}]`)
     if (props.has('childrenIDs')) {
       this.label.text = labelText(this.props.children)
       this.redrawChildren()
@@ -45,15 +49,20 @@ export class Deck extends Container<DeckProps> implements IContainer {
   }
 
   redrawChildren() {
+    this.log('-------redrawChildren--------, top: ')
     this.props.children.forEach(Deck.restyleChild)
   }
 
-  static restyleChild(child: Component<any>, idx/*, length*/) {
+  static restyleChild(child: Component<any>, idx, children) {
+    log.notice(`[me:${trim(child.props.parentId)}]card.order = ${child.props.order}, its index: ${idx}`)
     // TODO: maybe animate it
-    child.x = idx * .3
-    child.y = -idx * .3
+    const MAX_HEIGHT = cm2px(3)
+    const MIN_SPACE = cm2px(0.25)
+    const SPACE = limit(MAX_HEIGHT / children.length, 0, MIN_SPACE)
+    const OFFSET_ALL = SPACE * children.length
+    child.x = OFFSET_ALL - idx * SPACE
+    child.y = -OFFSET_ALL + idx * SPACE
     child.rotation = 0
-    // child.zIndex = idx + 5
   }
 
 }
