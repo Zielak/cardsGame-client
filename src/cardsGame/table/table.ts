@@ -14,17 +14,6 @@ import { Row } from '../containers/row'
 import { Spread } from '../containers/spread'
 import { Component, IProps } from '../component'
 
-const positionPlayers = (player: Player, idx: number, players: Player[]) => {
-  const angle = Math.PI * 2 / players.length * idx
-  const point = {
-    x: Math.sin(angle) * (Game.width * 0.4),
-    y: Math.cos(angle) * (Game.height * 0.4),
-  }
-  player.rotation = -angle
-  player.x = point.x
-  player.y = point.y
-}
-
 export class Table extends Component<TableProps> {
 
   containers = new Map<string, Component<any>>()
@@ -171,7 +160,19 @@ export class Table extends Component<TableProps> {
   }
 
   updatePlayers() {
-    Array.from(this.players.values()).forEach(positionPlayers)
+    // setTimeout(() =>
+    Array.from(this.players.values()).forEach((player: Player, idx: number, players: Player[]) => {
+      const angle = Math.PI * 2 / players.length * idx
+      const point = {
+        x: Math.sin(angle) * (Game.width * 0.4),
+        y: Math.cos(angle) * (Game.height * 0.4),
+      }
+      player.rotation = -angle
+      player.props.x = point.x
+      player.props.y = point.y
+      console.log(`player[${idx}] angle: ${angle}, point:`, point)
+    })
+    // , 0)
   }
 
 }

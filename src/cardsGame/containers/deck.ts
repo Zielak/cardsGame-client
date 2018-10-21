@@ -41,7 +41,7 @@ export class Deck extends CContainer<DeckProps> implements IContainer {
   }
 
   componentDidUpdate(props: Set<string>) {
-    this.log(`componentDidUpdate ${this.props.type}, children: [${keysList( this.props.childrenIDs).map(el => trim(el))}]`)
+    this.log(`componentDidUpdate ${this.props.type}, children: [${keysList(this.props.childrenIDs).map(el => trim(el))}]`)
     if (props.has('childrenIDs')) {
       this.label.text = labelText(this.props.children)
       this.redrawChildren()
@@ -60,8 +60,8 @@ export class Deck extends CContainer<DeckProps> implements IContainer {
     const MIN_SPACE = cm2px(0.25)
     const SPACE = limit(MAX_HEIGHT / children.length, 0, MIN_SPACE)
     const OFFSET_ALL = SPACE * children.length
-    child.x = OFFSET_ALL - idx * SPACE
-    child.y = -OFFSET_ALL + idx * SPACE
+    child.props.x = OFFSET_ALL - idx * SPACE
+    child.props.y = -OFFSET_ALL + idx * SPACE
     child.rotation = 0
   }
 

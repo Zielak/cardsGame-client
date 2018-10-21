@@ -70,7 +70,7 @@ export class Component<T extends IProps> extends Container implements IComponent
 
     })
 
-    // Pass all props to our proxy, so it has a chance to schedule updates
+    // NOPE: Pass all props to our proxy, so it has a chance to schedule updates
     if (props) {
       for (let key in props) {
         // this._props[key] = props[key]

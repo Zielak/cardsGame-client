@@ -5,7 +5,7 @@
 import { IProps, Component } from '../component'
 import { Graphics, Text } from 'pixi.js'
 import { CContainer, IContainer } from './container'
-import { deg2rad } from '../utils';
+import { deg2rad, trim } from '../utils';
 import { ClassicCard } from '../card/classicCard';
 
 const labelText = (children) => `Hand of ${children.length} cards`
@@ -41,7 +41,7 @@ export class Hand extends CContainer<HandProps> implements IContainer {
   }
 
   componentDidUpdate(props: Set<string>) {
-    this.log(`componentDidUpdate ${this.props.type}`)
+    this.log(`componentDidUpdate ${this.props.type} ${trim(this.props.id)}`)
     if (props.has('childrenIDs')) {
       this.redrawChildren()
     }
@@ -61,8 +61,8 @@ export class Hand extends CContainer<HandProps> implements IContainer {
     const funcR = (i, a) => i * a - i * a / 2
 
     const offsetIdx = idx / Math.max(1, max - 1)
-    child.x = funcX(offsetIdx, 1, 2) * width
-    child.y = -funcY(offsetIdx, max, max) * height
+    child.props.x = funcX(offsetIdx, 1, 2) * width
+    child.props.y = -funcY(offsetIdx, max, max) * height
     // child.rotation = -deg2rad(funcR(idx - max / 2, 10))
     child.rotation = deg2rad(funcX(offsetIdx, 1, 2, 0) * 45)
     // zIndex: idx + 1,

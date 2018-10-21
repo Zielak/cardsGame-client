@@ -57,8 +57,8 @@ export class Row extends CContainer<RowProps> implements IContainer {
     const width = 100 // TODO: get it from instance...
     const i = width / array.length
 
-    child.x = -width / 2 + i * idx
-    child.y = 0
+    child.props.x = -width / 2 + i * idx
+    child.props.y = 0
   }
 
 }

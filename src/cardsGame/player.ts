@@ -1,7 +1,7 @@
 import { Sprite, Text } from 'pixi.js'
 import { IProps } from './component'
 import { CContainer } from './containers/container'
-import { ClassicCard } from './card/classicCard';
+import { ClassicCard } from './card/classicCard'
 
 export class Player extends CContainer<PlayerProps> {
 
@@ -29,6 +29,8 @@ export class Player extends CContainer<PlayerProps> {
       this.label.text = this.props.name
     }
   }
+
+  redrawChildren() {}
 
 }
 
