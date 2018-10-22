@@ -1,4 +1,5 @@
 import { IComponent, Component, IProps } from '../component'
+import { trim } from '../utils'
 
 export interface IContainer extends IComponent {
   redrawChildren: () => void
@@ -10,7 +11,8 @@ export class CContainer<T extends IProps> extends Component<T> {
   constructor(props: T) {
     super(props)
     this.isContainer = true
-    this.on('childadded', () => {
+    this.on('childadded', child => {
+      this.log('childadded event came', trim(child.id))
       this.redrawChildren()
     })
   }

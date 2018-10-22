@@ -13,6 +13,7 @@ import { Pile } from '../containers/pile'
 import { Row } from '../containers/row'
 import { Spread } from '../containers/spread'
 import { Component, IProps } from '../component'
+import { log } from '../log'
 
 export class Table extends Component<TableProps> {
 
@@ -141,14 +142,12 @@ export class Table extends Component<TableProps> {
       }
     })
 
-    // this.on('cards.parentChange', (data) => {
-    //   console.log('cards.parentChange', data)
-    //   const element = Component.get(data.id)
-    //   const newParent = Component.get(data.parentId)
-    //   // TODO: animate from-to
-
-    //   newParent.addChild(element)
-    // })
+    this.on('cards.parentChange', (data) => {
+      log.notice('cards.parentChange', data)
+      // const element = Component.get(data.id)
+      // const newParent = Component.get(data.parentId)
+      // newParent.addChild(element)
+    })
   }
 
   private getParentContainer(parentId: string): Component<any> {
@@ -160,6 +159,7 @@ export class Table extends Component<TableProps> {
   }
 
   updatePlayers() {
+    log.notice('updatePlayers()')
     // setTimeout(() =>
     Array.from(this.players.values()).forEach((player: Player, idx: number, players: Player[]) => {
       const angle = Math.PI * 2 / players.length * idx

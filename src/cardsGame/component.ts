@@ -61,9 +61,11 @@ export class Component<T extends IProps> extends Container implements IComponent
       get: (target: T, prop) => {
         if (typeof prop === 'symbol') return
         if (prop === 'children') {
-          return Object.keys(target.childrenIDs)
+          const a = Object.keys(target.childrenIDs)
             .filter(Component.exists)
             .map(Component.get)
+          this.log(`I got ${this._props.childrenIDs} childrenIDs but ${a.length} children (?)`, a)
+          return a
         }
         return target[prop]
       }
@@ -89,7 +91,7 @@ export class Component<T extends IProps> extends Container implements IComponent
     this.on('added', (newParent: CContainer<any>) => {
       if (!newParent.props) return
       this.logVerbose('emit childadded on', newParent.props.type, this)
-      newParent.emit('childadded')
+      newParent.emit('childadded', this)
     })
   }
 

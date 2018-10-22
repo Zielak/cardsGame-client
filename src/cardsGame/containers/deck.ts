@@ -49,12 +49,12 @@ export class Deck extends CContainer<DeckProps> implements IContainer {
   }
 
   redrawChildren() {
-    this.log('-------redrawChildren--------, top: ')
+    // this.log('-------redrawChildren--------, top: ')
     this.props.children.forEach(Deck.restyleChild)
   }
 
   static restyleChild(child: Component<any>, idx, children) {
-    log.notice(`[me:${trim(child.props.parentId)}]card.order = ${child.props.order}, its index: ${idx}`)
+    // log.notice(`[me:${trim(child.props.parentId)}]card.order = ${child.props.order}, its index: ${idx}`)
     // TODO: maybe animate it
     const MAX_HEIGHT = cm2px(3)
     const MIN_SPACE = cm2px(0.25)

@@ -1,8 +1,16 @@
 import { log } from '../log'
 import { StateChangeEvent, parentChanges } from '.'
 import { Component } from '../component'
+import { trim } from '../utils'
 
 export default (target: Component<any>, room) => {
+
+  // FIXME:
+  // FIXME:
+  // FIXME: FUCK, does "attr changed" come BEFORE "card created"?!?!?!
+  // FIXME:
+  // FIXME:
+
   room.listen('cards/:idx', (change: StateChangeEvent) => {
     log.verbose(`cards => ${change.operation}`)
     target.emit('cards.' + change.operation, {
@@ -12,7 +20,7 @@ export default (target: Component<any>, room) => {
   })
 
   room.listen('cards/:idx/:attribute', (change: StateChangeEvent) => {
-    // log(`card ${change.path.idx} changed attribute ${change.path.attribute} to ${change.value} (${change.operation})`)
+    // log.notice(`card ${trim(change.path.idx)} changed attribute ${change.path.attribute} to ${change.value} (${change.operation})`)
 
     // Always emit generic event, props shall get updated with it
     target.emit('cards.attribute.update', {

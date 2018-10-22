@@ -7,6 +7,7 @@ import { Graphics, Text } from 'pixi.js'
 import { CContainer, IContainer } from './container'
 import { deg2rad, trim } from '../utils';
 import { ClassicCard } from '../card/classicCard';
+import { log } from '../log';
 
 const labelText = (children) => `Hand of ${children.length} cards`
 
@@ -41,13 +42,14 @@ export class Hand extends CContainer<HandProps> implements IContainer {
   }
 
   componentDidUpdate(props: Set<string>) {
-    this.log(`componentDidUpdate ${this.props.type} ${trim(this.props.id)}`)
+    this.log(`componentDidUpdate "${this.props.name}" ${trim(this.props.id)}`, props)
     if (props.has('childrenIDs')) {
       this.redrawChildren()
     }
   }
 
   redrawChildren() {
+    this.log('redrawChildren() - got this.props.children = ', this.props.children.length)
     this.props.children.forEach(Hand.restyleChild)
   }
 
@@ -66,6 +68,8 @@ export class Hand extends CContainer<HandProps> implements IContainer {
     // child.rotation = -deg2rad(funcR(idx - max / 2, 10))
     child.rotation = deg2rad(funcX(offsetIdx, 1, 2, 0) * 45)
     // zIndex: idx + 1,
+
+    log.notice(`-- restyleChild[${idx}] of ${arr.length} `, trim('' + child.x), trim('' + child.y))
   }
 }
 
