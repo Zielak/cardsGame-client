@@ -1,3 +1,5 @@
+import { noop } from './utils'
+
 enum LogLevels {
   silent,
   error,
@@ -9,28 +11,19 @@ enum LogLevels {
 
 let logLevel = LogLevels.silent
 
-export const log = {
-  error(...args) {
-    if (logLevel < LogLevels.error) return
-    console.error.call(console, ...args)
-  },
-  warn(...args) {
-    if (logLevel < LogLevels.warn) return
-    console.warn.call(console, ...args)
-  },
-  info(...args) {
-    if (logLevel < LogLevels.info) return
-    console.info.call(console, ...args)
-  },
-  notice(...args) {
-    if (logLevel < LogLevels.notice) return
-    console.log.call(console, ...args)
-  },
-  verbose(...args) {
-    if (logLevel < LogLevels.verbose) return
-    // TODO: add gray styles or something. It's low importance logs
-    console.log.call(console, ...args)
-  }
+export const log: {
+  error: (...args: any[]) => void,
+  warn: (...args: any[]) => void,
+  info: (...args: any[]) => void,
+  notice: (...args: any[]) => void,
+  verbose: (...args: any[]) => void,
+} = {
+  error: console.error.bind(window.console),
+  warn: console.warn.bind(window.console),
+  info: console.info.bind(window.console),
+  notice: console.log.bind(window.console),
+  // TODO: add gray styles or something. It's low importance logs
+  verbose: console.log.call(window.console)
 }
 
 const setLogLevel = (val: string) => {
@@ -68,3 +61,9 @@ try {
 } catch (e) {
   // disabled
 }
+
+if (logLevel < LogLevels.error) { log.error = noop }
+if (logLevel < LogLevels.warn) { log.warn = noop }
+if (logLevel < LogLevels.info) { log.info = noop }
+if (logLevel < LogLevels.notice) { log.notice = noop }
+if (logLevel < LogLevels.verbose) { log.verbose = noop }

@@ -64,7 +64,7 @@ export class Component<T extends IProps> extends Container implements IComponent
           const a = Object.keys(target.childrenIDs)
             .filter(Component.exists)
             .map(Component.get)
-          this.log(`I got ${this._props.childrenIDs} childrenIDs but ${a.length} children (?)`, a)
+          this.log(`I got `, this._props.childrenIDs, ` childrenIDs but ${a.length} children (?)`, a)
           return a
         }
         return target[prop]

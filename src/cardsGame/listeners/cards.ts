@@ -6,13 +6,11 @@ import { trim } from '../utils'
 export default (target: Component<any>, room) => {
 
   // FIXME:
-  // FIXME:
   // FIXME: FUCK, does "attr changed" come BEFORE "card created"?!?!?!
-  // FIXME:
-  // FIXME:
+  // FIXME: nope
 
   room.listen('cards/:idx', (change: StateChangeEvent) => {
-    log.verbose(`cards => ${change.operation}`)
+    log.notice(`cards => ${change.operation}`, change.value)
     target.emit('cards.' + change.operation, {
       idx: change.path.idx,
       card: change.value,

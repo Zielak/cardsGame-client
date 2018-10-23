@@ -49,7 +49,7 @@ export class Deck extends CContainer<DeckProps> implements IContainer {
   }
 
   redrawChildren() {
-    // this.log('-------redrawChildren--------, top: ')
+    this.log(`-------redrawChildren--------, children: [${this.props.childrenIDs.length}]`)
     this.props.children.forEach(Deck.restyleChild)
   }
 
