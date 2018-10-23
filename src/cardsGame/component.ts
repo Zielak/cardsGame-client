@@ -3,8 +3,28 @@ import { CContainer } from './containers/container'
 import { log } from './log'
 
 const components = new Map<string, Component<any>>()
-
+let updateScheduled = false
+let updaterId: NodeJS.Timeout
 const updateQueue = new Set<Component<any>>()
+const updateTimeout = () => {
+  // Schedule only one updater
+  if (updaterId) {
+    log.verbose('[component] - clearing last timeout')
+    clearTimeout(updaterId)
+  }
+  setTimeout(() => {
+    log.verbose(`updateQueue contains: ${updateQueue.size} things`)
+    // TODO: Should probably be sorted by level of nesting
+    // TODO: Deepest objects (cards) should be updated before containers
+    // TODO: So containers have a chance to run their "restyleChild" stuff
+    updateQueue.forEach(comp => {
+      comp._preComponentDidUpdate.call(comp, comp._updatedProps)
+      comp._updatedProps.clear()
+    })
+    updateScheduled = false
+    updateQueue.clear()
+  }, 1000)
+}
 
 export interface IProps {
   id: string,
@@ -27,7 +47,6 @@ export class Component<T extends IProps> extends Container implements IComponent
 
   _props: { [key: string]: any & T }
   _propsProxy: { [key: string]: any & T }
-  _updateScheduled: boolean = false
   _updatedProps = new Set<string>()
 
   isContainer: boolean = false
@@ -62,9 +81,9 @@ export class Component<T extends IProps> extends Container implements IComponent
         if (typeof prop === 'symbol') return
         if (prop === 'children') {
           const a = Object.keys(target.childrenIDs)
-            .filter(Component.exists)
+            // .filter(Component.exists)
             .map(Component.get)
-          this.log(`I got `, this._props.childrenIDs, ` childrenIDs but ${a.length} children (?)`, a)
+          // this.log(`I got `, this._props.childrenIDs, ` childrenIDs but ${a.length} children (?)`, a)
           return a
         }
         return target[prop]
@@ -147,31 +166,29 @@ export class Component<T extends IProps> extends Container implements IComponent
 
     // X and Y positions
     if (!parentComponent || parentComponent && !parentComponent.isContainer) {
+      this.logVerbose('   - Im gonna update my own x/y, fuck that ')
       if (props.has('x')) {
         this.x = this.props.x
       }
       if (props.has('y')) {
         this.y = this.props.y
       }
+    } else {
+      props.delete('x')
+      props.delete('y')
     }
-
 
     this.logVerbose(`_preComponentDidUpdate ${this.props.type} with: [${Array.from(props.values()).join(', ')}]`)
     this.componentDidUpdate(props)
   }
 
   private _scheduleUpdate(updatedProp: string) {
-    if (!this._updateScheduled) {
-      this._updateScheduled = true
-      this.logVerbose('update scheduled')
-      updateQueue.add(this)
-      setTimeout(() => {
-        this._preComponentDidUpdate.call(this, this._updatedProps)
-        this._updateScheduled = false
-        this._updatedProps.clear()
-        updateQueue.clear()
-      }, 0)
+    if (!updateScheduled) {
+      this.logVerbose(' - scheduling update')
+      updateScheduled = true
+      updateTimeout()
     }
+    updateQueue.add(this)
     this._updatedProps.add(updatedProp)
   }
 

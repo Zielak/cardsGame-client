@@ -11,19 +11,13 @@ enum LogLevels {
 
 let logLevel = LogLevels.silent
 
-export const log: {
-  error: (...args: any[]) => void,
-  warn: (...args: any[]) => void,
-  info: (...args: any[]) => void,
-  notice: (...args: any[]) => void,
-  verbose: (...args: any[]) => void,
-} = {
+export const log = {
   error: console.error.bind(window.console),
   warn: console.warn.bind(window.console),
   info: console.info.bind(window.console),
   notice: console.log.bind(window.console),
   // TODO: add gray styles or something. It's low importance logs
-  verbose: console.log.call(window.console)
+  verbose: console.log.bind(window.console)
 }
 
 const setLogLevel = (val: string) => {
