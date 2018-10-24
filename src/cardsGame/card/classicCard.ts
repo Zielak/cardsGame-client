@@ -78,7 +78,7 @@ export class ClassicCard extends Component<ClassicCardProps> implements ICompone
   }
 
   componentDidUpdate(props: Set<string>) {
-    this.logVerbose(`componentDidUpdate ${this.props.type}`)
+    // this.logVerbose(`componentDidUpdate ${this.props.type}`)
     if (props.has('rank')) {
       this.rank.text = this.getRankText(this.props.rank)
       this.rank.style = this.getRankStyle(this.props.rank)

@@ -6,7 +6,7 @@ import { ClassicCard } from '../card/classicCard'
 import { Component, IProps } from '../component'
 import { IContainer, CContainer } from './container'
 import { keysList, trim, cm2px, limit } from '../utils'
-import { log } from '../log';
+import { log } from '../log'
 
 const labelText = (children) => `DECK of ${children.length} cards`
 
@@ -49,7 +49,7 @@ export class Deck extends CContainer<DeckProps> implements IContainer {
   }
 
   redrawChildren() {
-    this.log(`-------redrawChildren--------, children: [${this.props.childrenIDs.length}]`, this.props)
+    this.log(`-------redrawChildren--------, children: [${Object.keys(this.props.childrenIDs).length}]`, this._props)
     this.props.children.forEach(Deck.restyleChild)
   }
 
