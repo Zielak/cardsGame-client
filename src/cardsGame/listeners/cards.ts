@@ -4,7 +4,7 @@ import { Component } from '../component'
 
 export default (target: Component<any>, room) => {
   room.listen('cards/:idx', (change: StateChangeEvent) => {
-    log.verbose(`cards => ${change.operation}`)
+    log.verbose(`cards => ${change.operation}`, change.value)
     target.emit('cards.' + change.operation, {
       idx: change.path.idx,
       card: change.value,
