@@ -1,6 +1,7 @@
 import { Container } from 'pixi.js'
 import { CContainer } from './containers/container'
-import { log } from './log'
+import { log, LogLevels } from './log'
+import { clone, procColorFromString } from './utils'
 
 const components = new Map<string, Component<any>>()
 
@@ -111,19 +112,37 @@ export class Component<T extends IProps> extends Container implements IComponent
   }
 
   logError(...args) {
-    log.error(`[${this.props.type}] `, ...args)
+    log.error(`%c[${this.props.type}]`, this._colorMod(this.props.type, LogLevels.error), ...args)
   }
   logWarn(...args) {
-    log.warn(`[${this.props.type}] `, ...args)
+    log.warn(`%c[${this.props.type}]`, this._colorMod(this.props.type, LogLevels.warn), ...args)
   }
   logInfo(...args) {
-    log.info(`[${this.props.type}] `, ...args)
+    log.info(`%c[${this.props.type}]`, this._colorMod(this.props.type, LogLevels.info), ...args)
   }
   log(...args) {
-    log.notice(`[${this.props.type}] `, ...args)
+    log.notice(`%c[${this.props.type}]`, this._colorMod(this.props.type, LogLevels.notice), ...args)
   }
   logVerbose(...args) {
-    log.verbose(`[${this.props.type}] `, ...args)
+    log.verbose(`%c[${this.props.type}]`, this._colorMod(this.props.type, LogLevels.verbose), ...args)
+  }
+
+  private _colorMod(str: string, type: LogLevels = LogLevels.notice) {
+    const background = procColorFromString(str, {
+      minS: 50
+    })
+    const foreground = background.luminosity() > 0.5 ? 'black' : 'white'
+    const foregroundNegative = background.luminosity() > 0.5 ? 'white' : 'black'
+    let leftBorder
+    switch (type) {
+      case LogLevels.error: leftBorder = 'border-left: 10px solid red'; break
+      case LogLevels.warn: leftBorder = 'border-left: 8px solid yellow'; break
+      case LogLevels.info: leftBorder = 'border-left: 2px solid blue'; break
+      default: leftBorder = ''
+    }
+    return `background: ${background}; color: ${foreground};
+      border: 2px solid ${background}; text-shadow: 1px 1px 1px ${foregroundNegative};
+      ${leftBorder}`
   }
 
   /**

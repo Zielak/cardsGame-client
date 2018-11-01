@@ -1,4 +1,6 @@
 import { Component } from './component'
+import Color from 'color'
+import md5 from 'md5'
 
 export interface IGameElement {
   parent: string | null
@@ -16,6 +18,8 @@ export const float = (min = 0, max = 1) => Math.floor(
 )
 
 export const limit = (val: number, min = 0, max = 1) => val < min ? min : val > max ? max : val
+
+export const wrap = (val: number, max = 1) => (val % max + max) % max
 
 export const rad2deg = (angle: number) => {
   //  discuss at: http://locutus.io/php/rad2deg/
@@ -44,6 +48,12 @@ export const trim = (string: string = '', maxLength: number = 7) => {
 }
 
 export const keysList = object => Object.keys(object)
+
+/**
+ * OBJECTS
+ */
+
+export const clone = object => Object.assign({}, object)
 
 /**
  * ELEMENTS FINDING
@@ -113,7 +123,8 @@ const string2bytes = (str) => {
   return bytes
 }
 
-export const procNumberFromString = (str, min = 0, max = 1) => {
+export const procNumberFromString = (str: string, min = 0, max = 1) => {
+  str = md5('' + str)
   const bytes = string2bytes(str).filter(value => value !== 0)
   const bMin = bytes.reduce((prev, curr) => {
     return curr < prev ? curr : prev
@@ -136,6 +147,47 @@ export const procNumberFromString = (str, min = 0, max = 1) => {
 
   const percent = (result - bMin) / Math.abs(bMax - bMin) * Math.abs(min - max) - Math.abs(min)
   return percent
+}
+
+export const procColorFromString = (str: string, config: ProcColorConfig = {}) => {
+  str = md5('' + str)
+
+  const bytes = string2bytes(str).filter(value => value !== 0)
+  const bMin = bytes.reduce((prev, curr) => {
+    return curr < prev ? curr : prev
+  }, bytes[0])
+  const bMax = bytes.reduce((prev, curr) => {
+    return curr > prev ? curr : prev
+  }, bytes[0])
+  const range = bMax - bMin
+  bytes.map(num => {
+    const perc = (num - bMin) / range
+    // console.log(`${perc} = (num[${num}] - bMin[${bMin}]) / range[${range}]`)
+    return perc
+  })
+  // I've got 32 bytes to work with
+  const rawH = bytes[0] * bytes[1] + bytes[2] * bytes[3] - bytes[4] * bytes[5] - bytes[6] * bytes[7]
+  const randH = Math.floor(wrap(rawH, 360))
+  const rawS = bytes[8] * bytes[9] + bytes[10] * bytes[11] - bytes[12] * bytes[13] - bytes[14] * bytes[15]
+  const randS = Math.floor(wrap(rawS, 100))
+  const rawL = bytes[16] * bytes[17] + bytes[18] * bytes[19] - bytes[20] * bytes[21] - bytes[22] * bytes[23]
+  const randL = Math.floor(wrap(rawL, 100))
+
+  const color = new Color().hsl(
+    def(limit(randH, def(config.minH, 0), def(config.maxH, 360)), randH),
+    def(limit(randS, def(config.minS, 0), def(config.maxS, 100)), randS),
+    def(limit(randL, def(config.minL, 0), def(config.maxL, 100)), randL)
+  )
+  return color
+}
+
+type ProcColorConfig = {
+  minH?: number
+  maxH?: number
+  minS?: number
+  maxS?: number
+  minL?: number
+  maxL?: number
 }
 
 /**

@@ -1,6 +1,6 @@
 import { noop } from './utils'
 
-enum LogLevels {
+export enum LogLevels {
   silent,
   error,
   warn,
@@ -23,7 +23,7 @@ export const log: {
   info: console.info.bind(window.console),
   notice: console.log.bind(window.console),
   // TODO: add gray styles or something. It's low importance logs
-  verbose: console.log.call(window.console)
+  verbose: console.log.bind(window.console)
 }
 
 const setLogLevel = (val: string) => {

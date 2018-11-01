@@ -6,7 +6,7 @@ import { ClassicCard } from '../card/classicCard'
 import { Component, IProps } from '../component'
 import { IContainer, CContainer } from './container'
 import { keysList, trim, cm2px, limit } from '../utils'
-import { log } from '../log';
+import { log } from '../log'
 
 const labelText = (children) => `DECK of ${children.length} cards`
 
